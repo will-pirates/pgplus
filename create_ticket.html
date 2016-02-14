@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"> 
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="/assets/css/bootstrap.min.css" rel="stylesheet">
+  </head>
+  <body>
+    <script src="/assets/js/jquery.js"></script>
+  	<script src="/assets/js/bootstrap.min.js"></script>
+  	<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=places"></script>
+    <script type="text/javascript">
+		$(document).ready(function() {
+			$('form input').keydown(function(event){
+				if(event.keyCode == 13) {
+					event.preventDefault();
+					return false;
+				}
+			});
+	        $('#create-ticket-submit').click(function(){
+	        	submitTicket();
+	        	return false;
+	        });
+		});
+        var placeSearch, autocomplete;
+        var componentForm = {
+          street_number: 'short_name',
+          route: 'long_name',
+          locality: 'long_name',
+          administrative_area_level_1: 'short_name',
+          country: 'long_name',
+          postal_code: 'short_name'
+        };
+
+        function initialize() {
+          // Create the autocomplete object, restricting the search
+          // to geographical location types.
+          autocomplete = new google.maps.places.Autocomplete((document.getElementById('geo-location')),{ types: [] });
+          // When the user selects an address from the dropdown,
+          // populate the address fields in the form.
+          google.maps.event.addListener(autocomplete, 'place_changed', function() {
+          	console.log("Here...");
+            var place = autocomplete.getPlace();
+            $('#geo-location').val(place.formatted_address);
+            placeSearch = place;
+            //initialize_company_map(place);
+            //fillInAddress();
+          });
+        }
+
+        // Bias the autocomplete object to the user's geographical location,
+        // as supplied by the browser's 'navigator.geolocation' object.
+        function geolocate() {
+          if (navigator.geolocation) {
+            initialize();
+            navigator.geolocation.getCurrentPosition(function(position) {
+              var geolocation = new google.maps.LatLng(
+                  position.coords.latitude, position.coords.longitude);
+              autocomplete.setBounds(new google.maps.LatLngBounds(geolocation,
+                  geolocation));
+            });
+          }
+        }
+
+        function submitTicket() {
+        	$.post( "/tickets/create", { 
+        		'lat': placeSearch.geometry.location.lat(), 
+        		'lng': placeSearch.geometry.location.lng(),
+        		'issue-type': $('#issue-type').val(),
+        		'equipment': $('#equipment').val(),
+        		'assignee': $('#assignee').val(),
+        		'notes': $('#notes').val(),
+        		'services': $('#services').val()
+        	})
+			  .done(function( data ) {
+			    alert( "Data Loaded: " + data );
+			});
+        }
+    </script>
+  	<div class="container">
+	    <h1>Enter ticket parameters</h1>
+		<form role="form" id="create-ticket-form">
+			<div class="form-group">
+				<label for="geo-locate">Job Location:</label>
+				<input type="text" class="form-control" id="geo-location" onFocus="geolocate()">
+			</div>
+			<div class="form-group">
+				<label for="issue-type">Issue type:</label>
+				<input type="text" class="form-control" id="issue-type">
+			</div>
+			<div class="form-group">
+				<label for="equipment">Equipment involved:</label>
+				<input type="text" class="form-control" id="equipment">
+			</div>
+			<div class="form-group">
+				<label for="services">Services purchased:</label>
+				<input type="text" class="form-control" id="services">
+			</div>
+			<div class="form-group">
+				<label for="services">Assigned to:</label>
+				<input type="text" class="form-control" id="assignee">
+			</div>
+			<div class="form-group">
+				<div class="panel-group">
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h4 class="panel-title">
+							<a data-toggle="collapse" href="#collapse1">Customer notes</a>
+							</h4>
+						</div>
+						<div id="collapse1" class="panel-collapse collapse">
+							<label for="notes">New note:</label>
+							<textarea class="form-control" rows="5" id="notes"></textarea>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="panel-group">
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h4 class="panel-title">
+							<a data-toggle="collapse" href="#collapse2">Ticket documents</a>
+							</h4>
+						</div>
+						<div id="collapse2" class="panel-collapse collapse">
+							<label for="document">New document:</label>
+							<input type="text" class="form-control" id="document">
+						</div>
+					</div>
+				</div>
+			</div>
+			<button type="submit" name="create-ticket-submit" id="create-ticket-submit" class="btn btn-default" >Submit</button>
+		</form>
+	</div>
+  </body>
+</html>

@@ -1,0 +1,12 @@
+<table>
+	<tr>
+		<td>Circle</td>
+		<td>Note</td>		
+	</tr>
+	{% for d in data %}
+	<tr>
+		<td>{{ d.circle.displayName }}</td>
+		<td>{{ d.note.object.originalContent }}</td>
+	</tr>
+	{% endfor %}
+</table>
