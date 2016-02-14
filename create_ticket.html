@@ -87,13 +87,16 @@
         }
 
         function submitTicket() {
+        	var notes = '';
+        	$('.customernoteslist p').each(function(){ notes = $(this).text() + ' ; ' + notes;});
+        	notes = notes.substring(0,notes.lastIndexOf(' ; '));
         	$.post( "/tickets/create", { 
         		'lat': placeSearch.geometry.location.lat(), 
         		'lng': placeSearch.geometry.location.lng(),
         		'issue-type': $('#issue-type').val(),
         		'equipment': $('#equipment').val(),
         		'assignee': $('#assignee').val(),
-        		'notes': $('#notes').val(),
+        		'notes': notes,
         		'location_text': $('#geo-location').val(), 
         		'services': $('#services').val()
         	})
