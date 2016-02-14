@@ -4,6 +4,14 @@
     <meta charset="utf-8"> 
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="/assets/css/bootstrap.min.css" rel="stylesheet">
+    <style type="text/css">
+    	.panel-collapse {
+    		padding: 10px;
+    	}
+    	.panel-collapse button {
+    		margin-top: 10px;
+    	}
+    </style>
   </head>
   <body>
     <script src="/assets/js/jquery.js"></script>
@@ -21,6 +29,22 @@
 	        	submitTicket();
 	        	return false;
 	        });
+			$('#add-customer-note').click(function(event) {
+				event.preventDefault();
+				var p = document.createElement("p");
+				p.innerHTML = $('#notes').val();
+				$(".customernoteslist").append(p);
+				$('#notes').val('');
+				return false;
+			});
+			$('#add-ticket-document').click(function(event) {
+				event.preventDefault();
+				var p = document.createElement("p");
+				p.innerHTML = $('#ticketdocument').val();
+				$(".ticketdocumentslist").append(p);
+				$('#ticketdocument').val('');
+				return false;
+			});
 		});
         var placeSearch, autocomplete;
         var componentForm = {
@@ -106,12 +130,15 @@
 					<div class="panel panel-default">
 						<div class="panel-heading">
 							<h4 class="panel-title">
-							<a data-toggle="collapse" href="#collapse1">Customer notes</a>
+							<a data-toggle="collapse" href="#customernotes">Customer notes</a>
 							</h4>
 						</div>
-						<div id="collapse1" class="panel-collapse collapse">
+						<div id="customernotes" class="panel-collapse collapse">
+							<div class="customernoteslist">
+							</div>
 							<label for="notes">New note:</label>
 							<textarea class="form-control" rows="5" id="notes"></textarea>
+							<button id="add-customer-note">Add Note</button>
 						</div>
 					</div>
 				</div>
@@ -121,12 +148,14 @@
 					<div class="panel panel-default">
 						<div class="panel-heading">
 							<h4 class="panel-title">
-							<a data-toggle="collapse" href="#collapse2">Ticket documents</a>
+							<a data-toggle="collapse" href="#ticketdocuments">Ticket documents</a>
 							</h4>
 						</div>
-						<div id="collapse2" class="panel-collapse collapse">
+						<div id="ticketdocuments" class="panel-collapse collapse">
+							<div class="ticketdocumentslist"></div>
 							<label for="document">New document:</label>
-							<input type="text" class="form-control" id="document">
+							<input type="text" class="form-control" id="ticketdocument">
+							<button id="add-ticket-document">Add Document</button>
 						</div>
 					</div>
 				</div>
