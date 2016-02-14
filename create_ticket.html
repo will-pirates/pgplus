@@ -90,6 +90,9 @@
         	var notes = '';
         	$('.customernoteslist p').each(function(){ notes = $(this).text() + ' ; ' + notes;});
         	notes = notes.substring(0,notes.lastIndexOf(' ; '));
+        	var ticketdocuments = '';
+        	$('.ticketdocumentslist p').each(function(){ ticketdocuments = $(this).text() + ' , ' + ticketdocuments;});
+        	ticketdocuments = ticketdocuments.substring(0,ticketdocuments.lastIndexOf(' , '));
         	$.post( "/tickets/create", { 
         		'lat': placeSearch.geometry.location.lat(), 
         		'lng': placeSearch.geometry.location.lng(),
@@ -97,6 +100,7 @@
         		'equipment': $('#equipment').val(),
         		'assignee': $('#assignee').val(),
         		'notes': notes,
+        		'documents' : ticketdocuments,
         		'location_text': $('#geo-location').val(), 
         		'services': $('#services').val()
         	})
