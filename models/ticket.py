@@ -4,6 +4,7 @@ from google.appengine.ext import db
 
 class Ticket(db.Model):
     location = db.GeoPtProperty()
+    location_text = db.StringProperty()
     issue_type = db.StringProperty()
     equipment = db.StringProperty()
     services = db.StringProperty()
