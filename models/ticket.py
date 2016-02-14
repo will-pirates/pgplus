@@ -12,4 +12,5 @@ class Ticket(db.Model):
     documents = db.StringListProperty()
     name = db.StringProperty(indexed=False)
     note_id = db.StringProperty(indexed=False)
+    circle_id = db.StringProperty(indexed=False)
     assigned = db.BooleanProperty()
