@@ -86,12 +86,24 @@ class AuthHandler(webapp2.RequestHandler):
 
 
 class GetTicketHandler(webapp2.RequestHandler):
+    def read_note(self, note_id):
+        credentials = refresh_token()
+        http = httplib2.Http()
+        http = credentials.authorize(http)
+        service = build('plusDomains', 'v1', http=http)
+        activities_service = service.activities()
+        activity = activities_service.get(activityId=note_id).execute()
+        return activity.get('object').get('content')
+
     def get(self):
         t = Ticket.all().filter('assigned', False).get()
         if t:
             t.assigned = True
             t.put()
-            self.response.write(json.dumps({'documents': t.documents , 'location_text': t.location_text, 'location': str(t.location), 'issue_type': t.issue_type, 'equipment': t.equipment, 'services': t.services}))
+            notes = []
+            for note_id in t.note_ids:
+                notes.append(self.read_note(note_id))
+            self.response.write(json.dumps({'documents': t.documents , 'location_text': t.location_text, 'location': str(t.location), 'issue_type': t.issue_type, 'equipment': t.equipment, 'services': t.services, 'notes': notes}))
 
 
 class CreateTicketHandler(webapp2.RequestHandler):
