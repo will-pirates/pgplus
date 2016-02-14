@@ -128,7 +128,7 @@ class CreateTicketHandler(webapp2.RequestHandler):
         services = self.request.get('services')
         location = GeoPt(lat, lng)
         location_text = self.request.get('location_text')
-        documents = self.request.get('documents').split(';')
+        documents = self.request.get('documents').split('#$#')
         Ticket(documents=documents, note_ids=note_ids, circle_id=circle_id, location=location, location_text=location_text, assigned=assigned, issue_type=issue_type, equipment=equipment, services=services).put()
 
     def add_to_circle(self, user_id, circle_id):
