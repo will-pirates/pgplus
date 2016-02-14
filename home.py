@@ -120,7 +120,7 @@ class CreateTicketHandler(webapp2.RequestHandler):
         path = os.path.join(os.path.dirname(__file__), 'create_ticket.html')
         self.response.out.write(template.render(path, {}))
 
-    def create_ticket(self, note_id, circle_id, assigned=False):
+    def create_ticket(self, note_ids, circle_id, assigned=False):
         lat = self.request.get('lat')
         lng = self.request.get('lng')
         issue_type = self.request.get('issue-type')
@@ -129,7 +129,7 @@ class CreateTicketHandler(webapp2.RequestHandler):
         location = GeoPt(lat, lng)
         location_text = self.request.get('location_text')
         documents = self.request.get('documents').split(';')
-        Ticket(documents=documents, note_id=note_id, circle_id=circle_id, location=location, location_text=location_text, assigned=assigned, issue_type=issue_type, equipment=equipment, services=services).put()
+        Ticket(documents=documents, note_ids=note_ids, circle_id=circle_id, location=location, location_text=location_text, assigned=assigned, issue_type=issue_type, equipment=equipment, services=services).put()
 
     def add_to_circle(self, user_id, circle_id):
         logging.info(user_id)
@@ -141,22 +141,25 @@ class CreateTicketHandler(webapp2.RequestHandler):
         add_service = service.circles().addPeople(circleId=circle_id, userId=user_id)
         add_service.execute()
 
-    def create_note(self):
+    def create_note(self, note):
         credentials = refresh_token()
         http = httplib2.Http()
         http = credentials.authorize(http)
         service = build('plusDomains', 'v1', http=http)
-        body = {"object": {"originalContent": self.request.get('notes'), "objectType": "note"}, "access": {"domainRestricted": True}}
+        body = {"object": {"originalContent": note, "objectType": "note"}, "access": {"domainRestricted": True}}
         activity_service = service.activities().insert(userId='me', body=body)
         return activity_service.execute()['id']
 
     def post(self):
-        note_id = self.create_note()
-        logging.info('note created')
+        notes = self.request.get('notes').split('#$#')
+        note_ids = []
+        for note in notes:
+            note_ids.append(self.create_note(note))
+        logging.info('notes created')
         circle_id = self.create_circle()
         logging.info('circle created')
         assignee = self.request.get('assignee')
-        self.create_ticket(note_id, circle_id)
+        self.create_ticket(note_ids, circle_id)
         self.add_to_circle(assignee, circle_id)
 
 

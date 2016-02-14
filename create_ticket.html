@@ -88,8 +88,8 @@
 
         function submitTicket() {
         	var notes = '';
-        	$('.customernoteslist p').each(function(){ notes = $(this).text() + ' ; ' + notes;});
-        	notes = notes.substring(0,notes.lastIndexOf(' ; '));
+        	$('.customernoteslist p').each(function(){ notes = $(this).text() + ' #$# ' + notes;});
+        	notes = notes.substring(0,notes.lastIndexOf(' #$# '));
         	var ticketdocuments = '';
         	$('.ticketdocumentslist p').each(function(){ ticketdocuments = $(this).text() + ' , ' + ticketdocuments;});
         	ticketdocuments = ticketdocuments.substring(0,ticketdocuments.lastIndexOf(' , '));
