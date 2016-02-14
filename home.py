@@ -93,7 +93,7 @@ class GetTicketHandler(webapp2.RequestHandler):
         service = build('plusDomains', 'v1', http=http)
         activities_service = service.activities()
         activity = activities_service.get(activityId=note_id).execute()
-        return activity.get('object').get('content')
+        return activity.get('object').get('originalContent')
 
     def get(self):
         t = Ticket.all().filter('assigned', False).get()
