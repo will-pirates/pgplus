@@ -117,15 +117,6 @@ class CreateTicketHandler(webapp2.RequestHandler):
         }
         resp = service.circles().insert(userId = 'me', body = new_circle).execute()
         return resp['id']
-        # resp = '1'
-        # ticket = Ticket(key_name=resp['id'], name=name, assigned=assigned)
-        # ticket.location = self.request.get('location')
-        # ticket.issue_type = self.request.get('issue_type')
-        # ticket.equipment = self.request.get('equipment')
-        # ticket.services = self.request.get('services')
-        # ticket.notes = [self.request.get('notes')]
-        # ticket.documents = [self.request.get('documents')]
-        # ticket.put()
 
     def get(self):
         path = os.path.join(os.path.dirname(__file__), 'create_ticket.html')
@@ -143,8 +134,6 @@ class CreateTicketHandler(webapp2.RequestHandler):
         Ticket(documents=documents, note_ids=note_ids, circle_id=circle_id, location=location, location_text=location_text, assigned=assigned, issue_type=issue_type, equipments=equipments, services=services).put()
 
     def add_to_circle(self, user_id, circle_id):
-        logging.info(user_id)
-        logging.info(circle_id)
         credentials = refresh_token()
         http = httplib2.Http()
         http = credentials.authorize(http)
@@ -166,9 +155,7 @@ class CreateTicketHandler(webapp2.RequestHandler):
         note_ids = []
         for note in notes:
             note_ids.append(self.create_note(note))
-        logging.info('notes created')
         circle_id = self.create_circle()
-        logging.info('circle created')
         assignee = self.request.get('assignee')
         self.create_ticket(note_ids, circle_id)
         self.add_to_circle(assignee, circle_id)
