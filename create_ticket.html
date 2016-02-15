@@ -88,7 +88,7 @@
         		'equipments': getItems('equipments'),
         		'engineer': $('#engineer').val(),
         		'dispatcher': $('#dispatcher').val(),
-        		'other_engineers': $('#other-engineers').val(),
+        		'other_engineers': $('#other-engineers').val().join('#$#'),
         		'notes': getItems('customernotes'),
         		'documents' : getItems('ticketdocuments'),
         		'location_text': $('#geo-location').val(), 
@@ -207,8 +207,7 @@
 			</div>
 			<div class="form-group">
 				<label for="other-engineers">Other Engineers:</label>
-				<select class="form-control" id="other-engineers" disabled>
-					<option value="-1">Select Other Engineer</option>
+				<select multiple class="form-control" id="other-engineers" disabled>
 				</select>
 			</div>
 			<div class="form-group">
