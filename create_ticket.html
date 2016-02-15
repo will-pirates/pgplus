@@ -18,6 +18,7 @@
   	<script src="/assets/js/bootstrap.min.js"></script>
   	<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=places"></script>
     <script type="text/javascript">
+    	var people = ['Joe', 'Lily', 'Adam', 'Steve'];
 		$(document).ready(function() {
 			$('form input').keydown(function(event){
 				if(event.keyCode == 13) {
@@ -32,6 +33,11 @@
 	        $('.add-item-button').click(function(event) {
 				return addItem(event, $(this).parent().find('.item').attr('id'));
 			});
+			for(i in people) {
+				var option = document.createElement("option");
+				option.innerHTML = people[i];
+				$('#engineer').append(option);
+			}
 		});
         var placeSearch, autocomplete;
         var componentForm = {
@@ -79,7 +85,9 @@
         		'lng': placeSearch.geometry.location.lng(),
         		'issue-type': $('#issue-type').val(),
         		'equipments': getItems('equipments'),
-        		'assignee': $('#assignee').val(),
+        		'engineer': $('#engineer').val(),
+        		'dispatcher': $('#dispatcher').val(),
+        		'other_engineers': $('#other-engineers').val(),
         		'notes': getItems('customernotes'),
         		'documents' : getItems('ticketdocuments'),
         		'location_text': $('#geo-location').val(), 
@@ -105,6 +113,34 @@
         	$('#'+item_id+' .itemslist p').each(function(){ items = $(this).text() + ' #$# ' + items;});
         	items = items.substring(0,items.lastIndexOf(' #$# '));
         	return items;
+        }
+
+        function enableDispatcher() {
+        	$('#engineer').prop('disabled', true);
+        	var engineer = $('#engineer').val();
+        	var dispatcher_options = people.slice();
+        	dispatcher_options.splice(dispatcher_options.indexOf(engineer), 1);
+        	for(i in dispatcher_options) {
+				var option = document.createElement("option");
+				option.innerHTML = dispatcher_options[i];
+				$('#dispatcher').append(option);
+			}
+			$('#dispatcher').prop('disabled', false);
+        }
+
+        function enableOtherEngineers() {
+        	$('#dispatcher').prop('disabled', true);
+        	var engineer = $('#engineer').val();
+        	var dispatcher = $('#dispatcher').val();
+        	var other_engineers_options = people.slice();
+        	other_engineers_options.splice(other_engineers_options.indexOf(engineer), 1);
+        	other_engineers_options.splice(other_engineers_options.indexOf(dispatcher), 1);
+        	for(i in other_engineers_options) {
+				var option = document.createElement("option");
+				option.innerHTML = other_engineers_options[i];
+				$('#other-engineers').append(option);
+			}
+			$('#other-engineers').prop('disabled', false);
         }
     </script>
   	<div class="container">
@@ -155,8 +191,22 @@
 				</div>
 			</div>
 			<div class="form-group">
-				<label for="services">Assigned to:</label>
-				<input type="text" class="form-control" id="assignee">
+				<label for="engineer">Engineer:</label>
+				<select class="form-control" id="engineer" onchange="enableDispatcher()">
+					<option value="-1">Select Engineer</option>
+				</select>
+			</div>
+			<div class="form-group">
+				<label for="dispatcher">Dispatcher:</label>
+				<select class="form-control" id="dispatcher" disabled onchange="enableOtherEngineers()">
+					<option value="-1">Select Dispatcher</option>
+				</select>
+			</div>
+			<div class="form-group">
+				<label for="other-engineers">Other Engineers:</label>
+				<select class="form-control" id="other-engineers" disabled>
+					<option value="-1">Select Other Engineer</option>
+				</select>
 			</div>
 			<div class="form-group">
 				<div class="panel-group">
