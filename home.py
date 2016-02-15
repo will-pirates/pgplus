@@ -108,7 +108,7 @@ class GetTicketHandler(webapp2.RequestHandler):
             notes = []
             for note_id in t.note_ids:
                 notes.append(self.read_note(note_id))
-            self.response.write(json.dumps({'documents': [document.split(' :: ') for document in t.documents] , 'location_text': t.location_text, 'location': str(t.location), 'issue_type': t.issue_type, 'equipments': t.equipments, 'services': t.services, 'notes': notes}))
+            self.response.write(json.dumps({'id': t.key().id() ,'documents': [document.split(' :: ') for document in t.documents] , 'location_text': t.location_text, 'location': str(t.location), 'issue_type': t.issue_type, 'equipments': t.equipments, 'services': t.services, 'notes': notes}))
 
 
 class CreateTicketHandler(webapp2.RequestHandler):
