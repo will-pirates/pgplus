@@ -163,8 +163,8 @@ class CreateTicketHandler(webapp2.RequestHandler):
         self.create_ticket(note_ids, circle_id)
         self.add_to_circle(engineer, circle_id)
         self.add_to_circle(dispatcher, circle_id)
-        for engineer in other_engineers:
-            self.add_to_circle(engineer, circle_id)
+        for other_engineer in other_engineers:
+            self.add_to_circle(other_engineer, circle_id)
 
 class AssignCirclesHandler(webapp2.RequestHandler):
     def get(self):
