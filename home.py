@@ -119,10 +119,9 @@ class GetTicketHandler(webapp2.RequestHandler):
 
 
 class CreateTicketHandler(webapp2.RequestHandler):
-    def create_circle(self):
-        name = str(uuid.uuid4())
+    def create_circle(self, ticket_id):
         new_circle = {
-            'displayName': name
+            'displayName': str(ticket_id)
         }
         resp = self.service.circles().insert(userId = 'me', body = new_circle).execute()
         return resp['id']
@@ -131,7 +130,7 @@ class CreateTicketHandler(webapp2.RequestHandler):
         path = os.path.join(os.path.dirname(__file__), 'create_ticket.html')
         self.response.out.write(template.render(path, {}))
 
-    def create_ticket(self, note_ids, circle_id, assigned=False):
+    def create_ticket(self, note_ids, assigned=False):
         lat = self.request.get('lat')
         lng = self.request.get('lng')
         issue_type = self.request.get('issue-type')
@@ -140,7 +139,9 @@ class CreateTicketHandler(webapp2.RequestHandler):
         location = GeoPt(lat, lng)
         location_text = self.request.get('location_text')
         documents = self.request.get('documents').split('#$#')
-        Ticket(documents=documents, note_ids=note_ids, circle_id=circle_id, location=location, location_text=location_text, assigned=assigned, issue_type=issue_type, equipments=equipments, services=services).put()
+        ticket = Ticket(documents=documents, note_ids=note_ids, location=location, location_text=location_text, assigned=assigned, issue_type=issue_type, equipments=equipments, services=services)
+        ticket.put()
+        return ticket.key().id()
 
     def add_to_circle(self, user_id, circle_id):
         add_service = self.service.circles().addPeople(circleId=circle_id, userId=user_id)
@@ -151,6 +152,11 @@ class CreateTicketHandler(webapp2.RequestHandler):
         activity_service = self.service.activities().insert(userId='me', body=body)
         return activity_service.execute()['id']
 
+    def update_ticket(self, ticket_id, circle_id):
+        ticket = Ticket.get_by_id(ticket_id)
+        ticket.circle_id = circle_id
+        ticket.put()
+
     def post(self):
         self.service = build_service()
         dispatcher = self.request.get('dispatcher')
@@ -159,9 +165,10 @@ class CreateTicketHandler(webapp2.RequestHandler):
         note_ids = []
         for note in notes:
             note_ids.append(self.create_note(note))
-        circle_id = self.create_circle()
+        ticket_id = self.create_ticket(note_ids)
+        circle_id = self.create_circle(ticket_id)
+        self.update_ticket(ticket_id, circle_id)
         engineer = self.request.get('engineer')
-        self.create_ticket(note_ids, circle_id)
         self.add_to_circle(engineer, circle_id)
         self.add_to_circle(dispatcher, circle_id)
         for other_engineer in other_engineers:
