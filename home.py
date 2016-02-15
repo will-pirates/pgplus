@@ -140,7 +140,8 @@ class CreateTicketHandler(webapp2.RequestHandler):
         location = GeoPt(lat, lng)
         location_text = self.request.get('location_text')
         documents = self.request.get('documents').split('#$#')
-        Ticket(documents=documents, note_ids=note_ids, circle_id=circle_id, location=location, location_text=location_text, assigned=assigned, issue_type=issue_type, equipments=equipments, services=services).put()
+        ticket_key = Ticket(documents=documents, note_ids=note_ids, circle_id=circle_id, location=location, location_text=location_text, assigned=assigned, issue_type=issue_type, equipments=equipments, services=services).put()
+        return ticket_key.id()
 
     def add_to_circle(self, user_id, circle_id):
         add_service = self.service.circles().addPeople(circleId=circle_id, userId=user_id)
@@ -161,11 +162,13 @@ class CreateTicketHandler(webapp2.RequestHandler):
             note_ids.append(self.create_note(note))
         circle_id = self.create_circle()
         engineer = self.request.get('engineer')
-        self.create_ticket(note_ids, circle_id)
+        ticket_id = self.create_ticket(note_ids, circle_id)
         self.add_to_circle(engineer, circle_id)
         self.add_to_circle(dispatcher, circle_id)
         for other_engineer in other_engineers:
             self.add_to_circle(other_engineer, circle_id)
+        self.response.headers['Content-Type'] = 'application/json'
+        self.response.out.write(json.dumps({'ticket_id':ticket_id}))
 
 class AssignCirclesHandler(webapp2.RequestHandler):
     def get(self):
