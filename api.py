@@ -19,7 +19,8 @@
 #     flow = OAuth2WebServerFlow(client_id=CLIENT_ID,
 #                                client_secret=CLIENT_SECRET,
 #                                scope=SCOPES,
-#                                redirect_uri=REDIRECT_URI)
+#                                redirect_uri=REDIRECT_URI,
+#                                approval_prompt='force')
 
 #     auth_uri = flow.step1_get_authorize_url()
 
