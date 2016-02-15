@@ -106,16 +106,18 @@ class GetTicketHandler(webapp2.RequestHandler):
 
 
 class CreateTicketHandler(webapp2.RequestHandler):
-    def create_circle(self):
-        name = str(uuid.uuid4())
+    def build_service(self):
         credentials = refresh_token()
         http = httplib2.Http()
         http = credentials.authorize(http)
-        service = build('plusDomains', 'v1', http=http)
+        return build('plusDomains', 'v1', http=http)
+
+    def create_circle(self):
+        name = str(uuid.uuid4())
         new_circle = {
             'displayName': name
         }
-        resp = service.circles().insert(userId = 'me', body = new_circle).execute()
+        resp = self.service.circles().insert(userId = 'me', body = new_circle).execute()
         return resp['id']
 
     def get(self):
@@ -134,23 +136,16 @@ class CreateTicketHandler(webapp2.RequestHandler):
         Ticket(documents=documents, note_ids=note_ids, circle_id=circle_id, location=location, location_text=location_text, assigned=assigned, issue_type=issue_type, equipments=equipments, services=services).put()
 
     def add_to_circle(self, user_id, circle_id):
-        credentials = refresh_token()
-        http = httplib2.Http()
-        http = credentials.authorize(http)
-        service = build('plusDomains', 'v1', http=http)
-        add_service = service.circles().addPeople(circleId=circle_id, userId=user_id)
+        add_service = self.service.circles().addPeople(circleId=circle_id, userId=user_id)
         add_service.execute()
 
     def create_note(self, note):
-        credentials = refresh_token()
-        http = httplib2.Http()
-        http = credentials.authorize(http)
-        service = build('plusDomains', 'v1', http=http)
         body = {"object": {"originalContent": note, "objectType": "note"}, "access": {"domainRestricted": True}}
-        activity_service = service.activities().insert(userId='me', body=body)
+        activity_service = self.service.activities().insert(userId='me', body=body)
         return activity_service.execute()['id']
 
     def post(self):
+        self.service = self.build_service()
         notes = self.request.get('notes').split('#$#')
         note_ids = []
         for note in notes:
