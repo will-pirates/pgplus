@@ -146,6 +146,8 @@ class CreateTicketHandler(webapp2.RequestHandler):
 
     def post(self):
         self.service = self.build_service()
+        dispatcher = self.request.get('dispatcher')
+        other_engineers = self.request.get('other_engineers').split('#$#')
         notes = self.request.get('notes').split('#$#')
         note_ids = []
         for note in notes:
@@ -154,7 +156,9 @@ class CreateTicketHandler(webapp2.RequestHandler):
         assignee = self.request.get('assignee')
         self.create_ticket(note_ids, circle_id)
         self.add_to_circle(assignee, circle_id)
-
+        self.add_to_circle(dispatcher, circle_id)
+        for engineer in other_engineers:
+            self.add_to_circle(engineer, circle_id)
 
 class AssignCirclesHandler(webapp2.RequestHandler):
     def get(self):
