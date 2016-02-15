@@ -153,9 +153,9 @@ class CreateTicketHandler(webapp2.RequestHandler):
         for note in notes:
             note_ids.append(self.create_note(note))
         circle_id = self.create_circle()
-        assignee = self.request.get('assignee')
+        engineer = self.request.get('engineer')
         self.create_ticket(note_ids, circle_id)
-        self.add_to_circle(assignee, circle_id)
+        self.add_to_circle(engineer, circle_id)
         self.add_to_circle(dispatcher, circle_id)
         for engineer in other_engineers:
             self.add_to_circle(engineer, circle_id)
