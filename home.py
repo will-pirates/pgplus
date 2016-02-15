@@ -103,7 +103,7 @@ class GetTicketHandler(webapp2.RequestHandler):
             notes = []
             for note_id in t.note_ids:
                 notes.append(self.read_note(note_id))
-            self.response.write(json.dumps({'documents': t.documents , 'location_text': t.location_text, 'location': str(t.location), 'issue_type': t.issue_type, 'equipment': t.equipment, 'services': t.services, 'notes': notes}))
+            self.response.write(json.dumps({'documents': t.documents , 'location_text': t.location_text, 'location': str(t.location), 'issue_type': t.issue_type, 'equipments': t.equipments, 'services': t.services, 'notes': notes}))
 
 
 class CreateTicketHandler(webapp2.RequestHandler):
@@ -136,12 +136,12 @@ class CreateTicketHandler(webapp2.RequestHandler):
         lat = self.request.get('lat')
         lng = self.request.get('lng')
         issue_type = self.request.get('issue-type')
-        equipment = self.request.get('equipment')
-        services = self.request.get('services')
+        equipments = self.request.get('equipments').split('#$#')
+        services = self.request.get('services').split('#$#')
         location = GeoPt(lat, lng)
         location_text = self.request.get('location_text')
         documents = self.request.get('documents').split('#$#')
-        Ticket(documents=documents, note_ids=note_ids, circle_id=circle_id, location=location, location_text=location_text, assigned=assigned, issue_type=issue_type, equipment=equipment, services=services).put()
+        Ticket(documents=documents, note_ids=note_ids, circle_id=circle_id, location=location, location_text=location_text, assigned=assigned, issue_type=issue_type, equipments=equipments, services=services).put()
 
     def add_to_circle(self, user_id, circle_id):
         logging.info(user_id)
