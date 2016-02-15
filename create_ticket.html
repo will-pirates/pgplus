@@ -18,7 +18,7 @@
   	<script src="/assets/js/bootstrap.min.js"></script>
   	<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=places"></script>
     <script type="text/javascript">
-    	var people = ['Joe', 'Lily', 'Adam', 'Steve'];
+    	var people = {'110209618710722590711':'Joe', '113567333915622858087':'Lilly', '105982168945827760991':'Adam', '109202041199787954100':'Steve'}
 		$(document).ready(function() {
 			$('form input').keydown(function(event){
 				if(event.keyCode == 13) {
@@ -33,9 +33,10 @@
 	        $('.add-item-button').click(function(event) {
 				return addItem(event, $(this).parent().find('.item').attr('id'));
 			});
-			for(i in people) {
+			for(id in people) {
 				var option = document.createElement("option");
-				option.innerHTML = people[i];
+				option.value = id;
+				option.innerHTML = people[id];
 				$('#engineer').append(option);
 			}
 		});
@@ -118,11 +119,12 @@
         function enableDispatcher() {
         	$('#engineer').prop('disabled', true);
         	var engineer = $('#engineer').val();
-        	var dispatcher_options = people.slice();
-        	dispatcher_options.splice(dispatcher_options.indexOf(engineer), 1);
-        	for(i in dispatcher_options) {
+        	var dispatcher_options = $.extend(true, {}, people);
+        	delete dispatcher_options[engineer];
+        	for(id in dispatcher_options) {
 				var option = document.createElement("option");
-				option.innerHTML = dispatcher_options[i];
+				option.value = id;
+				option.innerHTML = dispatcher_options[id];
 				$('#dispatcher').append(option);
 			}
 			$('#dispatcher').prop('disabled', false);
@@ -132,12 +134,13 @@
         	$('#dispatcher').prop('disabled', true);
         	var engineer = $('#engineer').val();
         	var dispatcher = $('#dispatcher').val();
-        	var other_engineers_options = people.slice();
-        	other_engineers_options.splice(other_engineers_options.indexOf(engineer), 1);
-        	other_engineers_options.splice(other_engineers_options.indexOf(dispatcher), 1);
-        	for(i in other_engineers_options) {
+        	var other_engineers_options = $.extend(true, {}, people);
+        	delete other_engineers_options[engineer];
+        	delete other_engineers_options[dispatcher];
+        	for(id in other_engineers_options) {
 				var option = document.createElement("option");
-				option.innerHTML = other_engineers_options[i];
+				option.value = id;
+				option.innerHTML = other_engineers_options[id];
 				$('#other-engineers').append(option);
 			}
 			$('#other-engineers').prop('disabled', false);
