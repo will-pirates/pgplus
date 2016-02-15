@@ -11,6 +11,63 @@
     	.panel-collapse button {
     		margin-top: 10px;
     	}
+
+    	.img-helper {
+		  min-width: 1px;
+		  display: inline-block;
+		  height: 100%;
+		  vertical-align: middle; }
+
+    	.spinner-container {
+		  background-color: rgba(255, 255, 255, 0.7);
+		  width: 100vw;
+		  height: 100vh;
+		  margin: auto;
+		  position: fixed;
+		  top: 0%;
+		  left: 0%;
+		  display: none;
+		  text-align: center; }
+		  .spinner-container .spinner {
+		    width: 60px;
+		    height: 60px;
+		    display: inline-block;
+		    vertical-align: middle;
+		    margin: auto;
+		    -webkit-animation: spin 4s linear infinite;
+		    -moz-animation: spin 4s linear infinite;
+		    animation: spin 4s linear infinite; }
+		    .spinner-container .spinner .quarter {
+		      height: 25%;
+		      width: 25%;
+		      border-radius: 50%;
+		      position: absolute; }
+		    .spinner-container .spinner .quarter-first {
+		      top: 25%;
+		      left: 25%;
+		      background-color: #579EDE; }
+		    .spinner-container .spinner .quarter-second {
+		      top: 25%;
+		      left: 51%;
+		      border: 1px solid #579EDE; }
+		    .spinner-container .spinner .quarter-third {
+		      top: 51%;
+		      left: 25%;
+		      border: 1px solid #579EDE; }
+		    .spinner-container .spinner .quarter-fourth {
+		      top: 51%;
+		      left: 51%;
+		      background-color: #579EDE; }
+		@-moz-keyframes spin {
+		  100% {
+		    -moz-transform: rotate(360deg); } }
+		@-webkit-keyframes spin {
+		  100% {
+		    -webkit-transform: rotate(360deg); } }
+		@keyframes spin {
+		  100% {
+		    -webkit-transform: rotate(360deg);
+		    transform: rotate(360deg); } }
     </style>
   </head>
   <body>
@@ -81,6 +138,7 @@
         }
 
         function submitTicket() {
+        	$(".spinner-container").show();
         	$.post( "/tickets/create", { 
         		'lat': placeSearch.geometry.location.lat(), 
         		'lng': placeSearch.geometry.location.lng(),
@@ -95,6 +153,7 @@
         		'services': getItems('services')
         	}).done(function(data) {
 			    alert( "Successfully added ticket with ID: "+data.ticket_id);
+			    $(".spinner-container").hide();
 			});
         }
 
@@ -250,5 +309,6 @@
 			<button type="submit" name="create-ticket-submit" id="create-ticket-submit" class="btn btn-default" >Submit</button>
 		</form>
 	</div>
+	{% include "spinner.html" %}
   </body>
 </html>
