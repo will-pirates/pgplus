@@ -186,8 +186,11 @@
 						</div>
 						<div id="ticketdocuments" class="panel-collapse collapse">
 							<div class="itemslist"></div>
-							<label for="document">New document:</label>
-							<input type="text" class="form-control item" id="ticketdocument">
+							<label for="document">Name:</label>
+							<input type="text" class="form-control" id="ticketdocument-name" onchange="$('#ticketdocument').val($('#ticketdocument-name').val()+' :: '+$('#ticketdocument-url').val());">
+							<label for="document">URL:</label>
+							<input type="text" class="form-control" id="ticketdocument-url" onchange="$('#ticketdocument').val($('#ticketdocument-name').val()+' :: '+$('#ticketdocument-url').val());">
+							<input type="hidden" class="form-control item" id="ticketdocument">
 							<button class="add-item-button" id="add-ticket-document">Add Document</button>
 						</div>
 					</div>
