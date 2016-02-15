@@ -95,17 +95,17 @@
         		'services': getItems('services')
         	})
 			  .done(function( data ) {
-			    alert( "Data Loaded: " + data );
+			    alert( "Successfully added ticket");
 			});
         }
 
         function addItem(event, item) {
-        	console.log('In addItem for: '+item);
 			event.preventDefault();
 			var p = document.createElement("p");
 			p.innerHTML = $('#'+item).val();
 			$('#'+item).parent().find(".itemslist").append(p);
 			$('#'+item).val('');
+			$('#'+item).parent().find(".item-part").val('');
 			return false;
         }
 
@@ -239,9 +239,9 @@
 						<div id="ticketdocuments" class="panel-collapse collapse">
 							<div class="itemslist"></div>
 							<label for="document">Name:</label>
-							<input type="text" class="form-control" id="ticketdocument-name" onchange="$('#ticketdocument').val($('#ticketdocument-name').val()+' :: '+$('#ticketdocument-url').val());">
+							<input type="text" class="form-control item-part" id="ticketdocument-name" onchange="$('#ticketdocument').val($('#ticketdocument-name').val()+' :: '+$('#ticketdocument-url').val());">
 							<label for="document">URL:</label>
-							<input type="text" class="form-control" id="ticketdocument-url" onchange="$('#ticketdocument').val($('#ticketdocument-name').val()+' :: '+$('#ticketdocument-url').val());">
+							<input type="text" class="form-control item-part" id="ticketdocument-url" onchange="$('#ticketdocument').val($('#ticketdocument-name').val()+' :: '+$('#ticketdocument-url').val());">
 							<input type="hidden" class="form-control item" id="ticketdocument">
 							<button class="add-item-button btn btn-default" id="add-ticket-document">Add Document</button>
 						</div>
