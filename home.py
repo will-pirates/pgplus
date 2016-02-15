@@ -89,35 +89,36 @@ class AuthHandler(webapp2.RequestHandler):
         credentials.refresh(httplib2.Http())
         print(credentials.to_json())
 
+def build_service():
+    credentials = refresh_token()
+    http = httplib2.Http()
+    http = credentials.authorize(http)
+    return build('plusDomains', 'v1', http=http)
 
 class GetTicketHandler(webapp2.RequestHandler):
+    def get_people(self, circle_id):
+        return self.service.people().listByCircle(circleId=circle_id).execute()
+
     def read_note(self, note_id):
-        credentials = refresh_token()
-        http = httplib2.Http()
-        http = credentials.authorize(http)
-        service = build('plusDomains', 'v1', http=http)
-        activities_service = service.activities()
+        activities_service = self.service.activities()
         activity = activities_service.get(activityId=note_id).execute()
         return activity.get('object').get('originalContent')
 
     def get(self):
         t = Ticket.all().filter('assigned', False).get()
+        self.service = build_service()
+        response = {}
         if t:
             t.assigned = True
             t.put()
             notes = []
             for note_id in t.note_ids:
                 notes.append(self.read_note(note_id))
-            self.response.write(json.dumps({'documents': [document.split(' :: ') for document in t.documents] , 'location_text': t.location_text, 'location': str(t.location), 'issue_type': t.issue_type, 'equipments': t.equipments, 'services': t.services, 'notes': notes}))
+            response = {'id': t.key().id(), 'people': [{'image': person['image']['url'], 'url': person['url']} for person in self.get_people(t.circle_id)['items']] ,'documents': [document.split(' :: ') for document in t.documents] , 'location_text': t.location_text, 'location': str(t.location), 'issue_type': t.issue_type, 'equipments': t.equipments, 'services': t.services, 'notes': notes}
+        self.response.write(json.dumps(response))
 
 
 class CreateTicketHandler(webapp2.RequestHandler):
-    def build_service(self):
-        credentials = refresh_token()
-        http = httplib2.Http()
-        http = credentials.authorize(http)
-        return build('plusDomains', 'v1', http=http)
-
     def create_circle(self):
         name = str(uuid.uuid4())
         new_circle = {
@@ -151,7 +152,7 @@ class CreateTicketHandler(webapp2.RequestHandler):
         return activity_service.execute()['id']
 
     def post(self):
-        self.service = self.build_service()
+        self.service = build_service()
         dispatcher = self.request.get('dispatcher')
         other_engineers = self.request.get('other_engineers').split('#$#')
         notes = self.request.get('notes').split('#$#')
