@@ -104,6 +104,13 @@ class GetTicketHandler(webapp2.RequestHandler):
         activity = activities_service.get(activityId=note_id).execute()
         return activity.get('object').get('originalContent')
 
+    def get_document(self, document_id):
+        activities_service = self.service.activities()
+        activity = activities_service.get(activityId=document_id).execute()
+        name = activity['title']
+        url = activity['object']['attachments'][0]['url']
+        return [name, url]
+
     def get(self):
         t = Ticket.all().filter('assigned', False).get()
         self.service = build_service()
@@ -114,7 +121,7 @@ class GetTicketHandler(webapp2.RequestHandler):
             notes = []
             for note_id in t.note_ids:
                 notes.append(self.read_note(note_id))
-            response = {'id': t.key().id(), 'lat': t.location.lat, 'lon': t.location.lon, 'people': [{'image': person['image']['url'], 'url': person['url']} for person in self.get_people(t.circle_id)['items']] ,'documents': [document.split(' :: ') for document in t.documents] , 'location_text': t.location_text, 'location': str(t.location), 'issue_type': t.issue_type, 'equipments': t.equipments, 'services': t.services, 'notes': notes}
+            response = {'id': t.key().id(), 'lat': t.location.lat, 'lon': t.location.lon, 'people': [{'image': person['image']['url'], 'url': person['url']} for person in self.get_people(t.circle_id)['items']] ,'documents': [self.get_document(document_id) for document_id in t.document_ids] , 'location_text': t.location_text, 'location': str(t.location), 'issue_type': t.issue_type, 'equipments': t.equipments, 'services': t.services, 'notes': notes}
         self.response.write(json.dumps(response))
 
 
