@@ -1,0 +1,157 @@
+body {
+  background: url(texture-noise.png);
+  margin: 0;
+  font-size: 14px;
+  font-family: "Helvetica Neue", Helvetica;
+}
+
+circle {
+  stroke: #000;
+  stroke-opacity: .5;
+}
+
+#chart, #header, #footer {
+  position: absolute;
+  top: 0;
+}
+
+#header, #footer {
+  z-index: 1;
+  display: block;
+  font-size: 36px;
+  font-weight: 300;
+  text-shadow: 0 1px 0 #fff;
+}
+
+#header.inverted, #footer.inverted {
+  color: #fff;
+  text-shadow: 0 1px 4px #000;
+}
+
+#header {
+  top: 80px;
+  left: 140px;
+  width: 1000px;
+}
+
+#footer {
+  top: 680px;
+  right: 140px;
+  text-align: right;
+}
+
+rect {
+  fill: none;
+  pointer-events: all;
+}
+
+pre {
+  font-size: 18px;
+}
+
+line {
+  stroke: #000;
+  stroke-width: 1.5px;
+}
+
+.string, .regexp {
+  color: #f39;
+}
+
+.keyword {
+  color: #00c;
+}
+
+.comment {
+  color: #777;
+  font-style: oblique;
+}
+
+.number {
+  color: #369;
+}
+
+.class, .special {
+  color: #1181B8;
+}
+
+a:link, a:visited {
+  color: #000;
+  text-decoration: none;
+}
+
+a:hover {
+  color: #666;
+}
+
+.hint {
+  position: absolute;
+  right: 0;
+  width: 1280px;
+  font-size: 12px;
+  color: #999;
+}
+
+.panel-collapse {
+  padding: 10px;
+}
+.panel-collapse button {
+  margin-top: 10px;
+}
+
+.img-helper {
+min-width: 1px;
+display: inline-block;
+height: 100%;
+vertical-align: middle; }
+
+.spinner-container {
+background-color: rgba(255, 255, 255, 0.7);
+width: 100vw;
+height: 100vh;
+margin: auto;
+position: fixed;
+top: 0%;
+left: 0%;
+display: none;
+text-align: center; }
+.spinner-container .spinner {
+  width: 60px;
+  height: 60px;
+  display: inline-block;
+  vertical-align: middle;
+  margin: auto;
+  -webkit-animation: spin 4s linear infinite;
+  -moz-animation: spin 4s linear infinite;
+  animation: spin 4s linear infinite; }
+  .spinner-container .spinner .quarter {
+    height: 25%;
+    width: 25%;
+    border-radius: 50%;
+    position: absolute; }
+  .spinner-container .spinner .quarter-first {
+    top: 25%;
+    left: 25%;
+    background-color: #579EDE; }
+  .spinner-container .spinner .quarter-second {
+    top: 25%;
+    left: 51%;
+    border: 1px solid #579EDE; }
+  .spinner-container .spinner .quarter-third {
+    top: 51%;
+    left: 25%;
+    border: 1px solid #579EDE; }
+  .spinner-container .spinner .quarter-fourth {
+    top: 51%;
+    left: 51%;
+    background-color: #579EDE; }
+@-moz-keyframes spin {
+100% {
+  -moz-transform: rotate(360deg); } }
+@-webkit-keyframes spin {
+100% {
+  -webkit-transform: rotate(360deg); } }
+@keyframes spin {
+100% {
+  -webkit-transform: rotate(360deg);
+  transform: rotate(360deg); } }

@@ -19,6 +19,16 @@ from oauth2client.client import OAuth2WebServerFlow, OAuth2Credentials
 from models.ticket import Ticket
 from google.appengine.ext.db import GeoPt
 
+people = {'customers':[['Rick','103764585826277201640'], ['Robert','108560908635605545932'], ['Ryan','102345940077083980832'],['Rachel','107612119418245526899'],['Rose','108612246962932756480']],
+          'engineers':[['Joe','110257721827374623737'],['Josephine','117685299168782698970'],['Jeremy','101967792556257735208'],['Jhon','103387629180365578874'],['James','101447084593147265288'],['Jenny','102417683683083682579'],['Jeff','115781491509522514753'],['Jason','105193078925726528104'],['Jenna','109061817072269062716']],
+          'experts':[['TWC','112739138406530779564'],['Cisco','110132770680215220078'],['Verizon','108741317245837764468'],['Belkin','112043759976089842597'],['Apple','103675625919779944270'],['Netgear','118014758899268715696']]}
+
+tags = ['router', 'modem', 'refrigerator', 'air conditioner', 'oven', 'dish washer', 'television', 'thermostat', 'anti theft', 'ventilation', 'cook tops', 'microwave', 'washer', 'dryer', 'cable television', 'broadband']
+
+tags_to_people = {'television': {'experts': [['Netgear', '118014758899268715696']]}, 'modem': {'experts': [['Belkin', '112043759976089842597']], 'engineers': [['Joe', '110257721827374623737'], ['Jason', '105193078925726528104']]}, 'cook tops': {'experts': [['TWC', '112739138406530779564'], ['Apple', '103675625919779944270'], ['Verizon', '108741317245837764468']], 'engineers': [['Jenny', '102417683683083682579'], ['Jenna', '109061817072269062716']]}, 'broadband': {'experts': [['TWC', '112739138406530779564']], 'engineers': [['Jason', '105193078925726528104']]}, 'anti theft': {'engineers': [['Jhon', '103387629180365578874'], ['Jeff', '115781491509522514753'], ['James', '101447084593147265288'], ['Jason', '105193078925726528104']]}, 'microwave': {'experts': [['Netgear', '118014758899268715696']], 'engineers': [['Jeremy', '101967792556257735208'], ['Jeff', '115781491509522514753'], ['James', '101447084593147265288']]}, 'ventilation': {'engineers': [['Jenna', '109061817072269062716']]}, 'dryer': {'experts': [['Belkin', '112043759976089842597']]}, 'cable television': {'experts': [['Apple', '103675625919779944270'], ['Verizon', '108741317245837764468'], ['Cisco', '110132770680215220078']], 'engineers': [['Jhon', '103387629180365578874'], ['Jeremy', '101967792556257735208']]}, 'oven': {'experts': [['Cisco', '110132770680215220078']], 'engineers': [['Jeff', '115781491509522514753']]}, 'air conditioner': {'experts': [['TWC', '112739138406530779564'], ['Cisco', '110132770680215220078']], 'engineers': [['Jenny', '102417683683083682579']]}, 'router': {'engineers': [['Jhon', '103387629180365578874'], ['Joe', '110257721827374623737'], ['Jenna', '109061817072269062716']]}, 'washer': {'engineers': [['Josephine', '117685299168782698970']]}, 'dish washer': {'experts': [['Verizon', '108741317245837764468']], 'engineers': [['Jeremy', '101967792556257735208'], ['Josephine', '117685299168782698970'], ['Jenny', '102417683683083682579'], ['James', '101447084593147265288']]}, 'refrigerator': {'experts': [['Netgear', '118014758899268715696']], 'engineers': [['Josephine', '117685299168782698970'], ['Joe', '110257721827374623737']]}, 'thermostat': {'experts': [['Belkin', '112043759976089842597'], ['Apple', '103675625919779944270']]}}
+
+id_to_name = {'103387629180365578874': 'Jhon', '118014758899268715696': 'Netgear', '101967792556257735208': 'Jeremy', '110132770680215220078': 'Cisco', '117685299168782698970': 'Josephine', '112739138406530779564': 'TWC', '115781491509522514753': 'Jeff', '102417683683083682579': 'Jenny', '110257721827374623737': 'Joe', '112043759976089842597': 'Belkin', '103675625919779944270': 'Apple', '109061817072269062716': 'Jenna', '108741317245837764468': 'Verizon', '101447084593147265288': 'James', '105193078925726528104': 'Jason'}
+
 def refresh_token():
     # peggy's creds
     credentials = OAuth2Credentials.from_json('{"_module": "oauth2client.client", "scopes": ["https://www.googleapis.com/auth/plus.circles.read", "https://www.googleapis.com/auth/plus.circles.write", "https://www.googleapis.com/auth/plus.stream.write", "https://www.googleapis.com/auth/plus.me", "https://www.googleapis.com/auth/plus.stream.read"], "token_expiry": "2016-02-16T11:19:50Z", "id_token": {"aud": "255555110806-4lk2mou3oek0hk7l9rpnegaqaef85bgj.apps.googleusercontent.com", "iss": "accounts.google.com", "at_hash": "PNjLEZCSbweplyXSCkJtiw", "exp": 1455621590, "azp": "255555110806-4lk2mou3oek0hk7l9rpnegaqaef85bgj.apps.googleusercontent.com", "iat": 1455617990, "sub": "108477436847495384050"}, "access_token": "ya29.igLy8L3IGaYFaht5K8sxDWBhcw_zyajnkNvcrWeOgAarX7GI97zZYgbQfjbUlmQP-hKJ", "token_uri": "https://accounts.google.com/o/oauth2/token", "invalid": false, "token_response": {"access_token": "ya29.igLy8L3IGaYFaht5K8sxDWBhcw_zyajnkNvcrWeOgAarX7GI97zZYgbQfjbUlmQP-hKJ", "token_type": "Bearer", "expires_in": 3600, "refresh_token": "1/itAK20q-A994M4PLYJUK9n1HCfEehB6wVcgQpY-thhc", "id_token": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjNhMTJmNTM4Zjc3ODAzMWM1MDBmMjFlNDgzYTQ2OGRhMTljMzUwMTAifQ.eyJpc3MiOiJhY2NvdW50cy5nb29nbGUuY29tIiwiYXRfaGFzaCI6IlBOakxFWkNTYndlcGx5WFNDa0p0aXciLCJhdWQiOiIyNTU1NTUxMTA4MDYtNGxrMm1vdTNvZWswaGs3bDlycG5lZ2FxYWVmODViZ2ouYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJzdWIiOiIxMDg0Nzc0MzY4NDc0OTUzODQwNTAiLCJhenAiOiIyNTU1NTUxMTA4MDYtNGxrMm1vdTNvZWswaGs3bDlycG5lZ2FxYWVmODViZ2ouYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJpYXQiOjE0NTU2MTc5OTAsImV4cCI6MTQ1NTYyMTU5MH0.Mr29UuLw1xbUPdNMJQXE6u3lq7W1RP0sMt8dnT5dTBICyw57OiL4PM7MT7Mfrroh-3yKLPly2Sz54OAAewpKUxy_aUxtSki17yfhOe9g9vLTwty6OwkBEja0uUoMwIferyZZBiu7BdHKZEM4rs-mYbk71nc3KdJkw0plC7nnUtfRnzzNN27TuiFGC8aNDX8o_BMLbNVgFcL6s3MJF8_YQWTLXwEk046Kcf658hY_59z6e-5YXEveDPD_QtscEr_MQRomBTHmDWOEVzotyV_axslelEtKWHfSGeTlv_cpb0PJ4sEgCcwmtWZWcRz9GKDE4m5l7bZnD6MIj-n_qFAyvw"}, "client_id": "255555110806-4lk2mou3oek0hk7l9rpnegaqaef85bgj.apps.googleusercontent.com", "token_info_uri": "https://www.googleapis.com/oauth2/v2/tokeninfo", "client_secret": "071WJgVZK-Rzb7bHyoHn28ao", "revoke_uri": "https://accounts.google.com/o/oauth2/revoke", "_class": "OAuth2Credentials", "refresh_token": "1/itAK20q-A994M4PLYJUK9n1HCfEehB6wVcgQpY-thhc", "user_agent": null}')
@@ -245,6 +255,25 @@ class GetNotesHandler(webapp2.RequestHandler):
         path = os.path.join(os.path.dirname(__file__), 'list.html')
         self.response.out.write(template.render(path, {'data': data}))
 
+class GetPeopleHandler(webapp2.RequestHandler):
+    def get(self):
+        self.response.write(json.dumps(people))
+
+class GetTicketPeopleHandler(webapp2.RequestHandler):
+    def get(self):
+        tag = self.request.get('tag')
+        self.response.write(json.dumps(tags_to_people[tag]))
+
+class GetTagsHandler(webapp2.RequestHandler):
+    def get(self):
+        ret_val = [[t.title(), t] for t in tags]
+        self.response.write(json.dumps(ret_val))
+
+class TempHandler(webapp2.RequestHandler):
+    def get(self):
+        path = os.path.join(os.path.dirname(__file__), 'collision.html')
+        self.response.out.write(template.render(path, {}))
+
 app = webapp2.WSGIApplication([
                                 ('/', MainPage),
                                 ('/auth', AuthHandler),
@@ -253,5 +282,9 @@ app = webapp2.WSGIApplication([
                                 ('/circles/get', GetCirclesHandler),
                                 ('/circles/assign', AssignCirclesHandler),
                                 ('/notes/create', CreateNoteHandler),
-                                ('/notes/get', GetNotesHandler)
+                                ('/notes/get', GetNotesHandler),
+                                ('/people/get', GetPeopleHandler),
+                                ('/tickets/get_people', GetTicketPeopleHandler),
+                                ('/tags/get', GetTagsHandler),
+                                ('/tickets/temp', TempHandler),
                             ], debug=True)

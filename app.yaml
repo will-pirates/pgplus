@@ -19,3 +19,9 @@ handlers:
 
 - url: /notes/get
   script: home.app
+
+- url: /people/get
+  script: home.app
+
+- url: /tags/get
+  script: home.app
