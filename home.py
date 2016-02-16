@@ -138,8 +138,8 @@ class CreateTicketHandler(webapp2.RequestHandler):
         services = self.request.get('services').split('#$#')
         location = GeoPt(lat, lng)
         location_text = self.request.get('location_text')
-        documents = self.request.get('documents').split('#$#')
-        ticket = Ticket(documents=documents, location=location, location_text=location_text, assigned=assigned, issue_type=issue_type, equipments=equipments, services=services)
+        # documents = self.request.get('documents').split('#$#')
+        ticket = Ticket(location=location, location_text=location_text, assigned=assigned, issue_type=issue_type, equipments=equipments, services=services)
         ticket.put()
         return ticket.key().id()
 
@@ -152,11 +152,17 @@ class CreateTicketHandler(webapp2.RequestHandler):
         activity_service = self.service.activities().insert(userId='me', body=body)
         return activity_service.execute()['id']
 
-    def update_ticket(self, ticket_id, circle_id, note_ids):
+    def update_ticket(self, ticket_id, circle_id, note_ids, document_ids):
         ticket = Ticket.get_by_id(ticket_id)
         ticket.circle_id = circle_id
         ticket.note_ids = note_ids
+        ticket.document_ids = document_ids
         ticket.put()
+
+    def create_documents(self, name, url, circle_id):
+        body = {"object": {"originalContent": name, "attachments": [{"objectType": "article", "url": url}]}, "access": { "items": [{"dispalyName": "circle", "type": "circle", "id": str(circle_id)}] , "domainRestricted": True}}
+        activity_service = self.service.activities().insert(userId='me', body=body)
+        return activity_service.execute()['id']
 
     def post(self):
         self.service = build_service()
@@ -166,9 +172,10 @@ class CreateTicketHandler(webapp2.RequestHandler):
         note_ids = []
         ticket_id = self.create_ticket()
         circle_id = self.create_circle(ticket_id)
+        document_ids = [self.create_documents(d.split(' :: ')[0], d.split(' :: ')[1], circle_id) for d in self.request.get('documents').split('#$#')]
         for note in notes:
             note_ids.append(self.create_note(note, circle_id))
-        self.update_ticket(ticket_id, circle_id, note_ids)
+        self.update_ticket(ticket_id, circle_id, note_ids, document_ids)
         engineer = self.request.get('engineer')
         self.add_to_circle(engineer, circle_id)
         self.add_to_circle(dispatcher, circle_id)
