@@ -277,7 +277,6 @@ class TempHandler(webapp2.RequestHandler):
 app = webapp2.WSGIApplication([
                                 ('/', MainPage),
                                 ('/auth', AuthHandler),
-                                ('/tickets/create', CreateTicketHandler),
                                 ('/tickets/get', GetTicketHandler),
                                 ('/circles/get', GetCirclesHandler),
                                 ('/circles/assign', AssignCirclesHandler),
@@ -286,5 +285,5 @@ app = webapp2.WSGIApplication([
                                 ('/people/get', GetPeopleHandler),
                                 ('/tickets/get_people', GetTicketPeopleHandler),
                                 ('/tags/get', GetTagsHandler),
-                                ('/tickets/temp', TempHandler),
+                                ('/tickets/create', TempHandler),
                             ], debug=True)

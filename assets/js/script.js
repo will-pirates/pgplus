@@ -1,5 +1,5 @@
 $(document).ready(function() {
-  load({'experts': [['Belkin', '112043759976089842597']], 'engineers': [['Joe', '110257721827374623737'], ['Jason', '105193078925726528104']]});
+  load({'experts': [], 'engineers': []});
 });
 
 function load(people){

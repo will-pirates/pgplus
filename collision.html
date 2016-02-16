@@ -23,7 +23,7 @@
       <div class="form-group">
         <label for="issue-type">Issue type:</label>
         <select class="form-control" id="issue-type">
-          <option value="modem">Modem</option>
+          <option value="-1">Select Issue Type</option>
         </select>
       </div>
       <div class="form-group">
@@ -117,7 +117,7 @@
   </div>
   {% include "spinner.html" %}
   <div class="container">
-    <div id="circles-container">
+    <div id="circles-container" style="display:hidden;">
     </div>
   </div>
 </body>
