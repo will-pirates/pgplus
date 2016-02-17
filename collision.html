@@ -6,6 +6,7 @@
     <script src="//d3js.org/d3.v3.min.js"></script>
     <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=places"></script>
     <link href="/assets/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/assets/css/style.css" rel="stylesheet">
     <script type="text/javascript" src="/assets/js/jquery.js"></script>
     <script type="text/javascript" src="/assets/js/script.js"></script>
     <script type="text/javascript" src="/assets/js/gmaps.js"></script>
@@ -14,116 +15,115 @@
   </head>
 <body>
   <div class="container">
-      <h1>Enter ticket parameters</h1>
-    <form role="form" id="create-ticket-form">
-      <div class="form-group">
-        <label for="geo-locate">Job Location:</label>
-        <input type="text" class="form-control" id="geo-location" onFocus="geolocate()">
-      </div>
-      <div class="form-group">
-        <label for="issue-type">Issue type:</label>
-        <select class="form-control" id="issue-type">
-          <option value="-1">Select Issue Type</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <div class="panel-group">
-          <div class="panel panel-default">
-            <div class="panel-heading">
-              <h4 class="panel-title">
-              <a data-toggle="collapse" href="#equipments">Equipments involved</a>
-              </h4>
-            </div>
-            <div id="equipments" class="panel-collapse collapse">
-              <div class="itemslist">
+    <div class="row">
+      <div class="col-xs-7 options-section">
+        <h1>Enter ticket parameters</h1>
+        <form role="form" id="create-ticket-form">
+          <div class="form-group">
+            <label for="geo-locate">Job Location:</label>
+            <input type="text" class="form-control" id="geo-location" onFocus="geolocate()">
+          </div>
+          <div class="form-group">
+            <label for="issue-type">Issue type:</label>
+            <select class="form-control circle-parameter" id="issue-type">
+              <option value="-1">Select Issue Type</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <div class="panel-group">
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h4 class="panel-title">
+                  <a data-toggle="collapse" href="#equipments">Equipments involved</a>
+                  </h4>
+                </div>
+                <div id="equipments" class="panel-collapse collapse">
+                  <div class="itemslist">
+                  </div>
+                  <label for="equipment">Equipment:</label>
+                  <input type="text" class="form-control item" id="equipment">
+                  <button class="add-item-button btn btn-default" id="add-equipment">Add Equipment</button>
+                </div>
               </div>
-              <label for="equipment">Equipment:</label>
-              <input type="text" class="form-control item" id="equipment">
-              <button class="add-item-button btn btn-default" id="add-equipment">Add Equipment</button>
             </div>
           </div>
-        </div>
-      </div>
-      <div class="form-group">
-        <div class="panel-group">
-          <div class="panel panel-default">
-            <div class="panel-heading">
-              <h4 class="panel-title">
-              <a data-toggle="collapse" href="#services">Services purchased</a>
-              </h4>
-            </div>
-            <div id="services" class="panel-collapse collapse">
-              <div class="itemslist">
+          <div class="form-group">
+            <div class="panel-group">
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h4 class="panel-title">
+                  <a data-toggle="collapse" href="#services">Services purchased</a>
+                  </h4>
+                </div>
+                <div id="services" class="panel-collapse collapse">
+                  <div class="itemslist">
+                  </div>
+                  <label for="service">Service:</label>
+                  <input type="text" class="form-control item" id="service">
+                  <button class="add-item-button btn btn-default" id="add-service">Add Service</button>
+                </div>
               </div>
-              <label for="service">Service:</label>
-              <input type="text" class="form-control item" id="service">
-              <button class="add-item-button btn btn-default" id="add-service">Add Service</button>
             </div>
           </div>
-        </div>
-      </div>
-      <div class="form-group">
-        <label for="engineer">Engineer:</label>
-        <select class="form-control" id="engineer">
-          <option value="-1">Select Engineer</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label for="customer">Customer:</label>
-        <select class="form-control" id="customer">
-          <option value="-1">Select Customer</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <div class="panel-group">
-          <div class="panel panel-default">
-            <div class="panel-heading">
-              <h4 class="panel-title">
-              <a data-toggle="collapse" href="#customernotes">Issue notes</a>
-              </h4>
-            </div>
-            <div id="customernotes" class="panel-collapse collapse">
-              <div class="itemslist">
+          <div class="form-group">
+            <label for="engineer">Engineer:</label>
+            <select class="form-control" id="engineer">
+              <option value="-1">Select Engineer</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="customer">Customer:</label>
+            <select class="form-control" id="customer">
+              <option value="-1">Select Customer</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <div class="panel-group">
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h4 class="panel-title">
+                  <a data-toggle="collapse" href="#customernotes">Issue notes</a>
+                  </h4>
+                </div>
+                <div id="customernotes" class="panel-collapse collapse">
+                  <div class="itemslist">
+                  </div>
+                  <label for="notes">New note:</label>
+                  <textarea class="form-control item" rows="5" id="notes"></textarea>
+                  <button class="add-item-button btn btn-default" id="add-customer-note">Add Note</button>
+                </div>
               </div>
-              <label for="notes">New note:</label>
-              <textarea class="form-control item" rows="5" id="notes"></textarea>
-              <button class="add-item-button btn btn-default" id="add-customer-note">Add Note</button>
             </div>
           </div>
-        </div>
-      </div>
-      <div class="form-group">
-        <div class="panel-group">
-          <div class="panel panel-default">
-            <div class="panel-heading">
-              <h4 class="panel-title">
-              <a data-toggle="collapse" href="#ticketdocuments">Ticket documents</a>
-              </h4>
-            </div>
-            <div id="ticketdocuments" class="panel-collapse collapse">
-              <div class="itemslist"></div>
-              <label for="document">Name:</label>
-              <input type="text" class="form-control item-part" id="ticketdocument-name" onchange="$('#ticketdocument').val($('#ticketdocument-name').val()+' :: '+$('#ticketdocument-url').val());">
-              <label for="document">URL:</label>
-              <input type="text" class="form-control item-part" id="ticketdocument-url" onchange="$('#ticketdocument').val($('#ticketdocument-name').val()+' :: '+$('#ticketdocument-url').val());">
-              <input type="hidden" class="form-control item" id="ticketdocument">
-              <button class="add-item-button btn btn-default" id="add-ticket-document">Add Document</button>
+          <div class="form-group">
+            <div class="panel-group">
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h4 class="panel-title">
+                  <a data-toggle="collapse" href="#ticketdocuments">Ticket documents</a>
+                  </h4>
+                </div>
+                <div id="ticketdocuments" class="panel-collapse collapse">
+                  <div class="itemslist"></div>
+                  <label for="document">Name:</label>
+                  <input type="text" class="form-control item-part" id="ticketdocument-name" onchange="$('#ticketdocument').val($('#ticketdocument-name').val()+' :: '+$('#ticketdocument-url').val());">
+                  <label for="document">URL:</label>
+                  <input type="text" class="form-control item-part" id="ticketdocument-url" onchange="$('#ticketdocument').val($('#ticketdocument-name').val()+' :: '+$('#ticketdocument-url').val());">
+                  <input type="hidden" class="form-control item" id="ticketdocument">
+                  <button class="add-item-button btn btn-default" id="add-ticket-document">Add Document</button>
+                </div>
+              </div>
             </div>
           </div>
+          <button type="submit" id="create-ticket-submit" class="btn btn-default" >Submit</button>
+        </form>
+      </div>
+      <div class="col-xs-5 circles-section">
+        <div id="circles-container" style="display:hidden;">
         </div>
       </div>
-      <button type="submit" name="load-relevant-people" id="load-relevant-people" class="btn btn-default" >Load relevant people</button>
-    </form>
-  </div>
-  {% include "spinner.html" %}
-  <div class="container">
-    <div id="circles-container" style="display:hidden;">
     </div>
   </div>
-  <div class="container">
-    <form role="form">
-      <button type="submit" id="create-ticket-submit" class="btn btn-default" >Submit</button>
-    </form>
-  </div>
+  {% include "spinner.html" %}
 </body>
 </html>

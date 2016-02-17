@@ -3,11 +3,28 @@ body {
   margin: 0;
   font-size: 14px;
   font-family: "Helvetica Neue", Helvetica;
+  overflow: hidden;
 }
 
 circle {
   stroke: #000;
   stroke-opacity: .5;
+}
+
+.options-section {
+  height: 100vh;
+  overflow: scroll;
+}
+
+.circles-section {
+  height: 50vh;
+  margin-top: 15vh;
+  margin-bottom: 35vh;
+}
+
+#circles-container {
+  height: 100%;
+  width: 100%;
 }
 
 #chart, #header, #footer {

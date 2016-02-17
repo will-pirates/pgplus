@@ -17,15 +17,7 @@ $(document).ready(function() {
     }
   });
 
-  $('#load-relevant-people').click(function(){
-    $.get("/tickets/get_people", { 
-      'tag': $('#issue-type').val()
-    }).done(function(data) {
-      var circlePeople = JSON.parse(data);
-      load(circlePeople);
-    });
-    return false;
-  });
+  $('.circle-parameter').change(function(){ return circleParameterChanged();});
 
   $('.add-item-button').click(function(event) {
     return addItem(event, $(this).parent().find('.item').attr('id'));
@@ -35,6 +27,16 @@ $(document).ready(function() {
     submitTicket();
   });
 });
+
+function circleParameterChanged() {
+  $.get("/tickets/get_people", { 
+    'tag': $('#issue-type').val()
+  }).done(function(data) {
+    var circlePeople = JSON.parse(data);
+    load(circlePeople);
+  });
+  return false;
+}
 
 function populatePeople(people, elem_id){
   for(idx in people) {

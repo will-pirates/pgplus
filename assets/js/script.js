@@ -4,16 +4,18 @@ $(document).ready(function() {
 
 function load(people){
   $("svg").remove();
-  var width = 800,
-      height = 400;
+  var width = $('#circles-container').width(),
+      height = $('#circles-container').height(),
+      circle_radius = $('#circles-container').width()/18,
+      min_circle_radius = 30;
 
   var engineerNodes = [];
   if(people.engineers){
-    engineerNodes = people.engineers.map(function(d){return {radius: 45, name: d[0], id: d[1], type: 'engineer'}});
+    engineerNodes = people.engineers.map(function(d){return {radius: Math.max(circle_radius, min_circle_radius), name: d[0], id: d[1], type: 'engineer'}});
   }
   var expertNodes = [];
   if(people.experts){
-    expertNodes = people.experts.map(function(d){return {radius: 45, name: d[0], id: d[1], type: 'expert'}});
+    expertNodes = people.experts.map(function(d){return {radius: Math.max(circle_radius, min_circle_radius), name: d[0], id: d[1], type: 'expert'}});
   }
   var rootNodes = [""].map(function(){return {radius: 5}});
   var nodes = rootNodes.concat(engineerNodes).concat(expertNodes),
