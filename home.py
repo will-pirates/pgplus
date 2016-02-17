@@ -208,9 +208,42 @@ class GetPeopleHandler(webapp2.RequestHandler):
         self.response.write(json.dumps(people))
 
 class GetTicketPeopleHandler(webapp2.RequestHandler):
+    def get_people_set(self, people):
+        retVal = set()
+        roles = ['experts', 'engineers']
+        for role in roles:
+            if role in people:
+                for person in people[role]:
+                    retVal.add(person[1])
+        return retVal
+
+    def extend(self, people, tag_people):
+        roles = ['experts', 'engineers']
+        people_set = self.get_people_set(people)
+        for role in roles:
+            if role in tag_people:
+                parent_list = []
+                if role in people:
+                    parent_list = people[role]
+                else:
+                	people[role] = parent_list
+                for person in tag_people[role]:
+                	if person[1] not in people_set:
+                		people_set.add(person[1])
+                		parent_list.append(person)
+
     def get(self):
         tag = self.request.get('tag')
-        self.response.write(json.dumps(tags_to_people[tag]))
+        people = {}
+        if all(x.isalpha() or x.isspace() for x in tag):
+        	tag_people = tags_to_people[tag]
+        	people = tag_people
+        notes = self.request.get('notes').lower()
+        for curr_tag in tags:
+        	if curr_tag in notes:
+        		tag_people = tags_to_people[curr_tag]
+        		self.extend(people, tag_people)
+        self.response.write(json.dumps(people))
 
 class GetTagsHandler(webapp2.RequestHandler):
     def get(self):
