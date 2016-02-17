@@ -140,21 +140,24 @@ class GetTicketHandler(webapp2.RequestHandler):
         return [name, url]
 
     def get(self):
-        t = Ticket.all().filter('assigned', False).get()
-        response = {}
-        if t:
-            t.assigned = True
-            t.put()
-            LastAssignedTicket(key_name="1", ticket=t).put()
-        else:
-            t = LastAssignedTicket.get_by_key_name('1').ticket
-        self.service = build_service(t.engineer[1])
-        notes = []
-        for note_id in t.note_ids:
-            notes.append(self.read_note(note_id))
-        response = {'id': t.key().id(), 'customer': t.customer, 'people': self.get_people(t.circle_id), 'engineer': t.engineer, 'lat': t.location.lat, 'lon': t.location.lon, 'documents': [self.get_document(document_id) for document_id in t.document_ids] , 'location_text': t.location_text, 'location': str(t.location), 'issue_type': t.issue_type, 'equipments': t.equipments, 'services': t.services, 'notes': notes}
-        self.response.headers.add_header("Access-Control-Allow-Origin", "*")
-        self.response.write(json.dumps(response))
+		t = Ticket.all().filter('assigned', False).get()
+		response = {}
+		if t:
+			t.assigned = True
+			t.put()
+			LastAssignedTicket(key_name="1", ticket=t).put()
+		else:
+			lastAssignedTicket = LastAssignedTicket.get_by_key_name('1')
+			if lastAssignedTicket:
+				t = lastAssignedTicket.ticket
+		if t:
+			self.service = build_service(t.engineer[1])
+			notes = []
+			for note_id in t.note_ids:
+				notes.append(self.read_note(note_id))
+			response = {'id': t.key().id(), 'customer': t.customer, 'people': self.get_people(t.circle_id), 'engineer': t.engineer, 'lat': t.location.lat, 'lon': t.location.lon, 'documents': [self.get_document(document_id) for document_id in t.document_ids] , 'location_text': t.location_text, 'location': str(t.location), 'issue_type': t.issue_type, 'equipments': t.equipments, 'services': t.services, 'notes': notes}
+		self.response.headers.add_header("Access-Control-Allow-Origin", "*")
+		self.response.write(json.dumps(response))
 
 class AssignCirclesHandler(webapp2.RequestHandler):
     def get(self):
