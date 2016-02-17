@@ -141,9 +141,9 @@ class GetTicketHandler(webapp2.RequestHandler):
 
     def get(self):
         t = Ticket.all().filter('assigned', False).get()
+        response = {}
         if t:
             self.service = build_service(t.engineer[1])
-            response = {}
             t.assigned = True
             t.put()
             notes = []
