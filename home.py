@@ -115,7 +115,17 @@ class AuthHandler(webapp2.RequestHandler):
 
 class GetTicketHandler(webapp2.RequestHandler):
     def get_people(self, circle_id):
-        return self.service.people().listByCircle(circleId=circle_id).execute()
+        people = self.service.people().listByCircle(circleId=circle_id).execute()
+        children = []
+        response ={"name":"people","children":children}
+        for child in people["items"]:
+            curr_child = {"name":child["displayName"],
+                     "size":3938,
+                     "image":child["image"]["url"],
+                     "profile":child["url"]
+                   }
+            children.append(curr_child)
+        return response
 
     def read_note(self, note_id):
         activities_service = self.service.activities()
@@ -139,7 +149,7 @@ class GetTicketHandler(webapp2.RequestHandler):
             notes = []
             for note_id in t.note_ids:
                 notes.append(self.read_note(note_id))
-            response = {'id': t.key().id(), 'customer': t.customer, 'engineer': t.engineer, 'lat': t.location.lat, 'lon': t.location.lon, 'documents': [self.get_document(document_id) for document_id in t.document_ids] , 'location_text': t.location_text, 'location': str(t.location), 'issue_type': t.issue_type, 'equipments': t.equipments, 'services': t.services, 'notes': notes}
+            response = {'id': t.key().id(), 'customer': t.customer, 'people': self.get_people(t.circle_id), 'engineer': t.engineer, 'lat': t.location.lat, 'lon': t.location.lon, 'documents': [self.get_document(document_id) for document_id in t.document_ids] , 'location_text': t.location_text, 'location': str(t.location), 'issue_type': t.issue_type, 'equipments': t.equipments, 'services': t.services, 'notes': notes}
         self.response.write(json.dumps(response))
 
 class AssignCirclesHandler(webapp2.RequestHandler):
