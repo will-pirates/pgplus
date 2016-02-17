@@ -23,9 +23,9 @@ people = {'customers':[['Rick','103764585826277201640'], ['Robert','108560908635
           'engineers':[['Joe','110257721827374623737'],['Josephine','117685299168782698970'],['Jeremy','101967792556257735208'],['Jhon','103387629180365578874'],['James','101447084593147265288'],['Jenny','102417683683083682579'],['Jeff','115781491509522514753'],['Jason','105193078925726528104'],['Jenna','109061817072269062716']],
           'experts':[['TWC','112739138406530779564'],['Cisco','110132770680215220078'],['Verizon','108741317245837764468'],['Belkin','112043759976089842597'],['Apple','103675625919779944270'],['Netgear','118014758899268715696']]}
 
-tags = ['router', 'modem', 'refrigerator', 'air conditioner', 'oven', 'dish washer', 'television', 'thermostat', 'anti theft', 'ventilation', 'cook tops', 'microwave', 'washer', 'dryer', 'cable television', 'broadband']
+tags = ['broadband', 'hvac', 'plumbing', 'home security']
 
-tags_to_people = {'television': {'experts': [['Netgear', '118014758899268715696']]}, 'modem': {'experts': [['Belkin', '112043759976089842597']], 'engineers': [['Joe', '110257721827374623737'], ['Jason', '105193078925726528104']]}, 'cook tops': {'experts': [['TWC', '112739138406530779564'], ['Apple', '103675625919779944270'], ['Verizon', '108741317245837764468']], 'engineers': [['Jenny', '102417683683083682579'], ['Jenna', '109061817072269062716']]}, 'broadband': {'experts': [['TWC', '112739138406530779564']], 'engineers': [['Jason', '105193078925726528104']]}, 'anti theft': {'engineers': [['Jhon', '103387629180365578874'], ['Jeff', '115781491509522514753'], ['James', '101447084593147265288'], ['Jason', '105193078925726528104']]}, 'microwave': {'experts': [['Netgear', '118014758899268715696']], 'engineers': [['Jeremy', '101967792556257735208'], ['Jeff', '115781491509522514753'], ['James', '101447084593147265288']]}, 'ventilation': {'engineers': [['Jenna', '109061817072269062716']]}, 'dryer': {'experts': [['Belkin', '112043759976089842597']]}, 'cable television': {'experts': [['Apple', '103675625919779944270'], ['Verizon', '108741317245837764468'], ['Cisco', '110132770680215220078']], 'engineers': [['Jhon', '103387629180365578874'], ['Jeremy', '101967792556257735208']]}, 'oven': {'experts': [['Cisco', '110132770680215220078']], 'engineers': [['Jeff', '115781491509522514753']]}, 'air conditioner': {'experts': [['TWC', '112739138406530779564'], ['Cisco', '110132770680215220078']], 'engineers': [['Jenny', '102417683683083682579']]}, 'router': {'engineers': [['Jhon', '103387629180365578874'], ['Joe', '110257721827374623737'], ['Jenna', '109061817072269062716']]}, 'washer': {'engineers': [['Josephine', '117685299168782698970']]}, 'dish washer': {'experts': [['Verizon', '108741317245837764468']], 'engineers': [['Jeremy', '101967792556257735208'], ['Josephine', '117685299168782698970'], ['Jenny', '102417683683083682579'], ['James', '101447084593147265288']]}, 'refrigerator': {'experts': [['Netgear', '118014758899268715696']], 'engineers': [['Josephine', '117685299168782698970'], ['Joe', '110257721827374623737']]}, 'thermostat': {'experts': [['Belkin', '112043759976089842597'], ['Apple', '103675625919779944270']]}}
+tags_to_people = {'broadband': {'experts': [['Netgear', '118014758899268715696'], ['Apple', '103675625919779944270']], 'engineers': [['Jhon', '103387629180365578874'], ['Joe', '110257721827374623737'], ['Jenna', '109061817072269062716']]}, 'plumbing': {'experts': [['TWC', '112739138406530779564'], ['Belkin', '112043759976089842597']], 'engineers': [['Josephine', '117685299168782698970']]}, 'home security': {'engineers': [['James', '101447084593147265288'], ['Jason', '105193078925726528104']]}, 'hvac': {'experts': [['Verizon', '108741317245837764468'], ['Cisco', '110132770680215220078']], 'engineers': [['Jeremy', '101967792556257735208'], ['Jeff', '115781491509522514753'], ['Jenny', '102417683683083682579']]}}
 
 id_to_name = {'103387629180365578874': 'Jhon', '118014758899268715696': 'Netgear', '101967792556257735208': 'Jeremy', '110132770680215220078': 'Cisco', '117685299168782698970': 'Josephine', '112739138406530779564': 'TWC', '115781491509522514753': 'Jeff', '102417683683083682579': 'Jenny', '110257721827374623737': 'Joe', '112043759976089842597': 'Belkin', '103675625919779944270': 'Apple', '109061817072269062716': 'Jenna', '108741317245837764468': 'Verizon', '101447084593147265288': 'James', '105193078925726528104': 'Jason'}
 
@@ -137,73 +137,6 @@ class GetTicketHandler(webapp2.RequestHandler):
             response = {'id': t.key().id(), 'lat': t.location.lat, 'lon': t.location.lon, 'people': [{'image': person['image']['url'], 'url': person['url']} for person in self.get_people(t.circle_id)['items']] ,'documents': [self.get_document(document_id) for document_id in t.document_ids] , 'location_text': t.location_text, 'location': str(t.location), 'issue_type': t.issue_type, 'equipments': t.equipments, 'services': t.services, 'notes': notes}
         self.response.write(json.dumps(response))
 
-
-class CreateTicketHandler(webapp2.RequestHandler):
-    def create_circle(self, ticket_id):
-        new_circle = {
-            'displayName': str(ticket_id)
-        }
-        resp = self.service.circles().insert(userId = 'me', body = new_circle).execute()
-        return resp['id']
-
-    def get(self):
-        path = os.path.join(os.path.dirname(__file__), 'create_ticket.html')
-        self.response.out.write(template.render(path, {}))
-
-    def create_ticket(self, assigned=False):
-        lat = self.request.get('lat')
-        lng = self.request.get('lng')
-        issue_type = self.request.get('issue-type')
-        equipments = self.request.get('equipments').split('#$#')
-        services = self.request.get('services').split('#$#')
-        location = GeoPt(lat, lng)
-        location_text = self.request.get('location_text')
-        # documents = self.request.get('documents').split('#$#')
-        ticket = Ticket(location=location, location_text=location_text, assigned=assigned, issue_type=issue_type, equipments=equipments, services=services)
-        ticket.put()
-        return ticket.key().id()
-
-    def add_to_circle(self, user_id, circle_id):
-        add_service = self.service.circles().addPeople(circleId=circle_id, userId=user_id)
-        add_service.execute()
-
-    def create_note(self, note, circle_id):
-        body = {"object": {"originalContent": note, "objectType": "note"}, "access": { "items": [{"dispalyName": "circle", "type": "circle", "id": str(circle_id)}] , "domainRestricted": True}}
-        activity_service = self.service.activities().insert(userId='me', body=body)
-        return activity_service.execute()['id']
-
-    def update_ticket(self, ticket_id, circle_id, note_ids, document_ids):
-        ticket = Ticket.get_by_id(ticket_id)
-        ticket.circle_id = circle_id
-        ticket.note_ids = note_ids
-        ticket.document_ids = document_ids
-        ticket.put()
-
-    def create_documents(self, name, url, circle_id):
-        body = {"object": {"originalContent": name, "attachments": [{"objectType": "article", "url": url}]}, "access": { "items": [{"dispalyName": "circle", "type": "circle", "id": str(circle_id)}] , "domainRestricted": True}}
-        activity_service = self.service.activities().insert(userId='me', body=body)
-        return activity_service.execute()['id']
-
-    def post(self):
-        self.service = build_service()
-        dispatcher = self.request.get('dispatcher')
-        other_engineers = self.request.get('other_engineers').split('#$#')
-        notes = self.request.get('notes').split('#$#')
-        note_ids = []
-        ticket_id = self.create_ticket()
-        circle_id = self.create_circle(ticket_id)
-        document_ids = [self.create_documents(d.split(' :: ')[0], d.split(' :: ')[1], circle_id) for d in self.request.get('documents').split('#$#')]
-        for note in notes:
-            note_ids.append(self.create_note(note, circle_id))
-        self.update_ticket(ticket_id, circle_id, note_ids, document_ids)
-        engineer = self.request.get('engineer')
-        self.add_to_circle(engineer, circle_id)
-        self.add_to_circle(dispatcher, circle_id)
-        for other_engineer in other_engineers:
-            self.add_to_circle(other_engineer, circle_id)
-        self.response.headers['Content-Type'] = 'application/json'
-        self.response.out.write(json.dumps({'ticket_id':ticket_id}))
-
 class AssignCirclesHandler(webapp2.RequestHandler):
     def get(self):
         circle = Circle.all().filter('assigned', False).get()
@@ -270,6 +203,69 @@ class GetTagsHandler(webapp2.RequestHandler):
         self.response.write(json.dumps(ret_val))
 
 class TempHandler(webapp2.RequestHandler):
+    def create_circle(self, ticket_id):
+        new_circle = {
+            'displayName': str(ticket_id)
+        }
+        resp = self.service.circles().insert(userId = 'me', body = new_circle).execute()
+        return resp['id']
+
+    def create_ticket(self, assigned=False):
+        lat = self.request.get('lat')
+        lng = self.request.get('lng')
+        issue_type = self.request.get('issue-type')
+        equipments = self.request.get('equipments').split('#$#')
+        services = self.request.get('services').split('#$#')
+        location = GeoPt(lat, lng)
+        location_text = self.request.get('location_text')
+        # documents = self.request.get('documents').split('#$#')
+        ticket = Ticket(location=location, location_text=location_text, assigned=assigned, issue_type=issue_type, equipments=equipments, services=services)
+        ticket.put()
+        return ticket.key().id()
+
+    def add_to_circle(self, user_id, circle_id):
+        add_service = self.service.circles().addPeople(circleId=circle_id, userId=user_id)
+        add_service.execute()
+
+    def create_note(self, note, circle_id):
+        body = {"object": {"originalContent": note, "objectType": "note"}, "access": { "items": [{"dispalyName": "circle", "type": "circle", "id": str(circle_id)}] , "domainRestricted": True}}
+        activity_service = self.service.activities().insert(userId='me', body=body)
+        return activity_service.execute()['id']
+
+    def update_ticket(self, ticket_id, circle_id, note_ids, document_ids):
+        ticket = Ticket.get_by_id(ticket_id)
+        ticket.circle_id = circle_id
+        ticket.note_ids = note_ids
+        ticket.document_ids = document_ids
+        ticket.put()
+
+    def create_documents(self, name, url, circle_id):
+        body = {"object": {"originalContent": name, "attachments": [{"objectType": "article", "url": url}]}, "access": { "items": [{"dispalyName": "circle", "type": "circle", "id": str(circle_id)}] , "domainRestricted": True}}
+        activity_service = self.service.activities().insert(userId='me', body=body)
+        return activity_service.execute()['id']
+
+    def post(self):
+        self.service = build_service()
+        notes = self.request.get('notes').split('#$#')
+        note_ids = []
+        ticket_id = self.create_ticket()
+        circle_id = self.create_circle(ticket_id)
+        document_ids = [self.create_documents(d.split(' :: ')[0], d.split(' :: ')[1], circle_id) for d in self.request.get('documents').split('#$#')]
+        for note in notes:
+            note_ids.append(self.create_note(note, circle_id))
+        self.update_ticket(ticket_id, circle_id, note_ids, document_ids)
+        engineer = self.request.get('engineer')
+        self.add_to_circle(engineer, circle_id)
+        people = tags_to_people[self.request.get('issue-type')]
+        if 'engineers' in people:
+            for eng in people['engineers']:
+                self.add_to_circle(eng[1], circle_id)
+        if 'experts' in people:
+            for eng in people['experts']:
+                self.add_to_circle(eng[1], circle_id)
+        self.response.headers['Content-Type'] = 'application/json'
+        self.response.out.write(json.dumps({'ticket_id':ticket_id}))
+
     def get(self):
         path = os.path.join(os.path.dirname(__file__), 'collision.html')
         self.response.out.write(template.render(path, {}))
