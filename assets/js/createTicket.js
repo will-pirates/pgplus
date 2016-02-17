@@ -20,7 +20,11 @@ $(document).ready(function() {
   $('.circle-parameter').change(function(){ return circleParameterChanged();});
 
   $('.add-item-button').click(function(event) {
-    return addItem(event, $(this).parent().find('.item').attr('id'));
+    var res = addItem(event, $(this).parent().find('.item').attr('id'));
+    if($(this).hasClass('circle-parameter')) {
+      circleParameterChanged();
+    }
+    return res;
   });
 
   $('#create-ticket-submit').click(function(event) {
@@ -30,7 +34,8 @@ $(document).ready(function() {
 
 function circleParameterChanged() {
   $.get("/tickets/get_people", { 
-    'tag': $('#issue-type').val()
+    'tag': $('#issue-type').val(),
+    'notes': getItems('customernotes')
   }).done(function(data) {
     var circlePeople = JSON.parse(data);
     load(circlePeople);
