@@ -29,6 +29,7 @@ $(document).ready(function() {
 
   $('#create-ticket-submit').click(function(event) {
     submitTicket();
+    return false;
   });
 });
 
