@@ -14,3 +14,5 @@ class Ticket(db.Model):
     note_ids = db.StringListProperty()
     circle_id = db.StringProperty(indexed=False)
     assigned = db.BooleanProperty()
+    engineer = db.StringListProperty()
+    customer = db.StringListProperty()

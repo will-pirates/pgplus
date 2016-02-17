@@ -59,7 +59,9 @@ function submitTicket() {
     'notes': getItems('customernotes'),
     'documents' : getItems('ticketdocuments'),
     'location_text': $('#geo-location').val(), 
-    'services': getItems('services')
+    'services': getItems('services'),
+    'customer': [$('#customer').val(), $('#customer option:selected').text()].join(),
+    'engineer': [$('#engineer').val(), $('#engineer option:selected').text()].join()
   }).done(function(data) {
     alert( "Successfully added ticket with ID: "+data.ticket_id);
     $(".spinner-container").hide();

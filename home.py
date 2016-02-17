@@ -218,8 +218,9 @@ class TempHandler(webapp2.RequestHandler):
         services = self.request.get('services').split('#$#')
         location = GeoPt(lat, lng)
         location_text = self.request.get('location_text')
-        # documents = self.request.get('documents').split('#$#')
-        ticket = Ticket(location=location, location_text=location_text, assigned=assigned, issue_type=issue_type, equipments=equipments, services=services)
+        customer = self.request.get('customer').split(',')
+        engineer = self.request.get('engineer').split(',')
+        ticket = Ticket(customer=customer, engineer=engineer, location=location, location_text=location_text, assigned=assigned, issue_type=issue_type, equipments=equipments, services=services)
         ticket.put()
         return ticket.key().id()
 
