@@ -25,3 +25,9 @@ handlers:
 
 - url: /tags/get
   script: home.app
+
+- url: /auth
+  script: home.app
+
+- url: /auth/callback
+  script: home.app
