@@ -255,7 +255,7 @@ class TempHandler(webapp2.RequestHandler):
         for note in notes:
             note_ids.append(self.create_note(note, circle_id))
         self.update_ticket(ticket_id, circle_id, note_ids, document_ids)
-        engineer = self.request.get('engineer')
+        engineer = self.request.get('engineer').split(',')[0]
         self.add_to_circle(engineer, circle_id)
         people = tags_to_people[self.request.get('issue-type')]
         if 'engineers' in people:
