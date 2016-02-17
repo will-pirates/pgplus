@@ -16,3 +16,6 @@ class Ticket(db.Model):
     assigned = db.BooleanProperty()
     engineer = db.StringListProperty()
     customer = db.StringListProperty()
+
+class LastAssignedTicket(db.Model):
+    ticket = db.ReferenceProperty()

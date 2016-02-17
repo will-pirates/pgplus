@@ -16,7 +16,7 @@ from oauth2client.client import OAuth2WebServerFlow, OAuth2Credentials
 
 # from api import get_credentials
 
-from models.ticket import Ticket
+from models.ticket import Ticket, LastAssignedTicket
 from google.appengine.ext.db import GeoPt
 
 engineer_creds = {
@@ -143,13 +143,16 @@ class GetTicketHandler(webapp2.RequestHandler):
         t = Ticket.all().filter('assigned', False).get()
         response = {}
         if t:
-            self.service = build_service(t.engineer[1])
             t.assigned = True
             t.put()
-            notes = []
-            for note_id in t.note_ids:
-                notes.append(self.read_note(note_id))
-            response = {'id': t.key().id(), 'customer': t.customer, 'people': self.get_people(t.circle_id), 'engineer': t.engineer, 'lat': t.location.lat, 'lon': t.location.lon, 'documents': [self.get_document(document_id) for document_id in t.document_ids] , 'location_text': t.location_text, 'location': str(t.location), 'issue_type': t.issue_type, 'equipments': t.equipments, 'services': t.services, 'notes': notes}
+            LastAssignedTicket(key_name="1", ticket=t).put()
+        else:
+            t = LastAssignedTicket.get_by_key_name('1').ticket
+        self.service = build_service(t.engineer[1])
+        notes = []
+        for note_id in t.note_ids:
+            notes.append(self.read_note(note_id))
+        response = {'id': t.key().id(), 'customer': t.customer, 'people': self.get_people(t.circle_id), 'engineer': t.engineer, 'lat': t.location.lat, 'lon': t.location.lon, 'documents': [self.get_document(document_id) for document_id in t.document_ids] , 'location_text': t.location_text, 'location': str(t.location), 'issue_type': t.issue_type, 'equipments': t.equipments, 'services': t.services, 'notes': notes}
         self.response.write(json.dumps(response))
 
 class AssignCirclesHandler(webapp2.RequestHandler):
