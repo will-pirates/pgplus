@@ -134,7 +134,7 @@ class GetTicketHandler(webapp2.RequestHandler):
             notes = []
             for note_id in t.note_ids:
                 notes.append(self.read_note(note_id))
-            response = {'id': t.key().id(), 'customer': t.customer, 'engineer': t.engineer, 'lat': t.location.lat, 'lon': t.location.lon, 'people': [{'image': person['image']['url'], 'url': person['url']} for person in self.get_people(t.circle_id)['items']] ,'documents': [self.get_document(document_id) for document_id in t.document_ids] , 'location_text': t.location_text, 'location': str(t.location), 'issue_type': t.issue_type, 'equipments': t.equipments, 'services': t.services, 'notes': notes}
+            response = {'id': t.key().id(), 'customer': t.customer, 'engineer': t.engineer, 'lat': t.location.lat, 'lon': t.location.lon, 'documents': [self.get_document(document_id) for document_id in t.document_ids] , 'location_text': t.location_text, 'location': str(t.location), 'issue_type': t.issue_type, 'equipments': t.equipments, 'services': t.services, 'notes': notes}
         self.response.write(json.dumps(response))
 
 class AssignCirclesHandler(webapp2.RequestHandler):
