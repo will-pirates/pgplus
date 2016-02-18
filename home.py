@@ -121,7 +121,7 @@ class GetTicketHandler(webapp2.RequestHandler):
         for child in people["items"]:
             curr_child = {"name":child["displayName"],
                      "size":3938,
-                     "image":child["image"]["url"],
+                     "image":child["image"]["url"].replace("?sz=50", "?sz=500"),
                      "profile":child["url"]
                    }
             children.append(curr_child)
