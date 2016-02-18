@@ -242,7 +242,7 @@ class GetTicketPeopleHandler(webapp2.RequestHandler):
     def get(self):
         tag = self.request.get('tag')
         people = {}
-        if all(x.isalpha() or x.isspace() for x in tag):
+        if tag != '-1':
         	tag_people = tags_to_people[tag]
         	people = tag_people
         notes = self.request.get('notes').lower()
