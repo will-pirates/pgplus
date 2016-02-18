@@ -20,7 +20,7 @@ for e in people['experts']:
 def assign_tags(assignees, role):
 	for person_id in assignees:
 		curr_tags = set()
-		while len(curr_tags) < 1:
+		while len(curr_tags) < 3:
 			idx = int(random.uniform(0, len(tags)))
 			curr_tag = tags[idx]
 			if curr_tag not in tags_to_people:
