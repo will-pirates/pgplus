@@ -1,7 +1,8 @@
 import random
 import math
 
-tags = ['broadband', 'hvac', 'plumbing', 'home security']
+
+tags = ['broadband', 'hvac', 'plumbing', 'home security', 'installation' , 'repair/maintenance', 'replacement', 'delivery', 'meter reading', 'estimate/inspection']
 
 people = {'customers':[['Rick','103764585826277201640'], ['Robert','108560908635605545932'], ['Ryan','102345940077083980832'],['Rachel','107612119418245526899'],['Rose','108612246962932756480']],
           'engineers':[['Joe','110257721827374623737'],['Josephine','117685299168782698970'],['Jeremy','101967792556257735208'],['Jhon','103387629180365578874'],['James','101447084593147265288'],['Jenny','102417683683083682579'],['Jeff','115781491509522514753'],['Jason','105193078925726528104'],['Jenna','109061817072269062716']],
