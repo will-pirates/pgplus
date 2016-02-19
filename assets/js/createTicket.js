@@ -116,7 +116,7 @@ function submitTicket() {
     'customer': [$('#customer').val(), $('#customer option:selected').text()].join(),
     'engineer': [$('#engineer').val(), $('#engineer option:selected').text()].join()
   }).done(function(data) {
-    alert( "Successfully added ticket with ID: "+data.ticket_id);
+    alert( "Successfully added ticket with Job ID: "+data.job_id);
     $(".spinner-container").hide();
   });
 }

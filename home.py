@@ -289,7 +289,7 @@ class TempHandler(webapp2.RequestHandler):
         engineer = self.request.get('engineer').split(',')
         ticket = Ticket(job_id=job_id, customer=customer, engineer=engineer, location=location, location_text=location_text, assigned=assigned, issue_type=issue_type, equipments=equipments, services=services)
         ticket.put()
-        return ticket.key().id()
+        return ticket
 
     def add_to_circle(self, user_id, circle_id):
         add_service = self.service.circles().addPeople(circleId=circle_id, userId=user_id)
@@ -318,7 +318,9 @@ class TempHandler(webapp2.RequestHandler):
         self.service = build_service(engineer_name)
         notes = self.request.get('notes').split('#$#')
         note_ids = []
-        ticket_id = self.create_ticket()
+        ticket = self.create_ticket()
+        ticket_id = ticket.key().id()
+        job_id = ticket.job_id
         circle_id = self.create_circle(ticket_id)
         document_ids = [self.create_documents(d.split(' :: ')[0], d.split(' :: ')[1], circle_id) for d in self.request.get('documents').split('#$#')]
         for note in notes:
@@ -334,7 +336,7 @@ class TempHandler(webapp2.RequestHandler):
             for eng in people['experts']:
                 self.add_to_circle(eng[1], circle_id)
         self.response.headers['Content-Type'] = 'application/json'
-        self.response.out.write(json.dumps({'ticket_id':ticket_id}))
+        self.response.out.write(json.dumps({'job_id':job_id}))
 
     def get(self):
         path = os.path.join(os.path.dirname(__file__), 'collision.html')
