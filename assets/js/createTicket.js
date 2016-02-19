@@ -49,27 +49,22 @@ function jobIDChanged() {
     codeAddress();
     $('#issue-type').val(job_deets.issue.type);
     $('#issue-type').change();
-    for(var i in job_deets.equipments) {
-      addItem('equipments', job_deets.equipments[i]);
-    }
-    $('#equipments').collapse();
-    for(var i in job_deets.services) {
-      addItem('services', job_deets.services[i]);
-    }
-    $('#services').collapse();
+    addItemsFor('equipments', job_deets.equipments);
+    addItemsFor('services', job_deets.services);
     $('#engineer').val(job_deets.engineer.id);
     $('#customer').val(job_deets.customer.id);
-    for(var i in job_deets.notes) {
-      addItem('customernotes', job_deets.notes[i]);
-    }
-    $('#customernotes').collapse();
+    addItemsFor('customernotes', job_deets.notes);
     circleParameterChanged();
-    for(var i in job_deets.documents) {
-      addItem('ticketdocuments', job_deets.documents[i]);
-    }
-    $('#ticketdocuments').collapse();
+    addItemsFor('ticketdocuments', job_deets.documents);
   });
   return false;
+}
+
+function addItemsFor(parameter, items) {
+  for(var i in items) {
+    addItem(parameter, items[i]);
+  }
+  $('#'+parameter).collapse();
 }
 
 function reset_form() {
