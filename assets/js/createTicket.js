@@ -24,7 +24,7 @@ $(document).ready(function() {
   $('#job-id').change(function(){ return jobIDChanged();});
 
   $('.add-item-button').click(function(event) {
-    var res = addItem(event, $(this).parent().find('.item').attr('id'));
+    var res = addItem($(this).parent().find('.item').attr('id'), null, event);
     if($(this).hasClass('circle-parameter')) {
       circleParameterChanged();
     }
@@ -38,14 +38,48 @@ $(document).ready(function() {
 });
 
 function jobIDChanged() {
+  reset_form();
   $.get("/tickets/get_job_deets", { 
     'job-id': $('#job-id').val()
   }).done(function(data) {
     console.log(data);
     job_deets = JSON.parse(data);
     $('#geo-location').val(job_deets.location.addr);
+    $('#issue-type').val(job_deets.issue.type);
+    $('#issue-type').change();
+    for(var i in job_deets.equipments) {
+      addItem('equipments', job_deets.equipments[i]);
+    }
+    $('#equipments').collapse();
+    for(var i in job_deets.services) {
+      addItem('services', job_deets.services[i]);
+    }
+    $('#services').collapse();
+    $('#engineer').val(job_deets.engineer.id);
+    $('#customer').val(job_deets.customer.id);
+    for(var i in job_deets.notes) {
+      addItem('customernotes', job_deets.notes[i]);
+    }
+    $('#customernotes').collapse();
+    circleParameterChanged();
+    for(var i in job_deets.documents) {
+      addItem('ticketdocuments', job_deets.documents[i]);
+    }
+    $('#ticketdocuments').collapse();
   });
   return false;
+}
+
+function reset_form() {
+  $('#geo-location').val('');
+  $('#issue-type').val('-1');
+  $('#issue-type').change();
+  $('#equipments .itemslist').empty();
+  $('#services .itemslist').empty();
+  $('#engineer').val('-1');
+  $('#customer').val('-1');
+  $('#customernotes .itemslist').empty();
+  $('#ticketdocuments .itemslist').empty();
 }
 
 function circleParameterChanged() {
@@ -89,13 +123,19 @@ function submitTicket() {
   });
 }
 
-function addItem(event, item) {
-  event.preventDefault();
+function addItem(item, value, event) {
+  if(event) {
+    event.preventDefault();
+  }
   var p = document.createElement("p");
-  p.innerHTML = $('#'+item).val();
+  if(value) {
+    p.innerHTML = value;
+  } else {
+    p.innerHTML = $('#'+item).val();
+    $('#'+item).val('');
+    $('#'+item).parent().find(".item-part").val('');
+  }
   $('#'+item).parent().find(".itemslist").append(p);
-  $('#'+item).val('');
-  $('#'+item).parent().find(".item-part").val('');
   return false;
 }
 
