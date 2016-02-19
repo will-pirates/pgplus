@@ -280,7 +280,7 @@ class TempHandler(webapp2.RequestHandler):
         lat = self.request.get('lat')
         lng = self.request.get('lng')
         issue_type = self.request.get('issue-type')
-        job_id = self.request.get('job-id')
+        job_id = self.request.get('job-id').replace('#','')
         equipments = self.request.get('equipments').split('#$#')
         services = self.request.get('services').split('#$#')
         location = GeoPt(lat, lng)
