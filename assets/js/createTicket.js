@@ -108,6 +108,7 @@ function populatePeople(people, elem_id){
 function submitTicket() {
   $(".spinner-container").show();
   $.post( "/tickets/create", { 
+    'job-id': $('#job-id').val(),
     'lat': lat, 
     'lng': lng,
     'issue-type': $('#issue-type').val(),
