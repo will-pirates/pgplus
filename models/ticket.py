@@ -13,6 +13,7 @@ class Ticket(db.Model):
     name = db.StringProperty(indexed=False)
     note_ids = db.StringListProperty()
     circle_id = db.StringProperty(indexed=False)
+    job_id = db.StringProperty()
     assigned = db.BooleanProperty()
     engineer = db.StringListProperty()
     customer = db.StringListProperty()
