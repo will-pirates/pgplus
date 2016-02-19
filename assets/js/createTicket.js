@@ -1,3 +1,5 @@
+var job_deets = {};
+
 $(document).ready(function() {
   $.get('/people/get', function(data){
     var people = JSON.parse(data);
@@ -19,6 +21,8 @@ $(document).ready(function() {
 
   $('.circle-parameter').change(function(){ return circleParameterChanged();});
 
+  $('#job-id').change(function(){ return jobIDChanged();});
+
   $('.add-item-button').click(function(event) {
     var res = addItem(event, $(this).parent().find('.item').attr('id'));
     if($(this).hasClass('circle-parameter')) {
@@ -32,6 +36,17 @@ $(document).ready(function() {
     return false;
   });
 });
+
+function jobIDChanged() {
+  $.get("/tickets/get_job_deets", { 
+    'job-id': $('#job-id').val()
+  }).done(function(data) {
+    console.log(data);
+    job_deets = JSON.parse(data);
+    $('#geo-location').val(job_deets.location.addr);
+  });
+  return false;
+}
 
 function circleParameterChanged() {
   $.get("/tickets/get_people", { 
