@@ -39,12 +39,14 @@ $(document).ready(function() {
 
 function jobIDChanged() {
   reset_form();
+  geolocate();
   $.get("/tickets/get_job_deets", { 
     'job-id': $('#job-id').val()
   }).done(function(data) {
     console.log(data);
     job_deets = JSON.parse(data);
     $('#geo-location').val(job_deets.location.addr);
+    codeAddress();
     $('#issue-type').val(job_deets.issue.type);
     $('#issue-type').change();
     for(var i in job_deets.equipments) {
@@ -106,8 +108,8 @@ function populatePeople(people, elem_id){
 function submitTicket() {
   $(".spinner-container").show();
   $.post( "/tickets/create", { 
-    'lat': placeSearch.geometry.location.lat(), 
-    'lng': placeSearch.geometry.location.lng(),
+    'lat': lat, 
+    'lng': lng,
     'issue-type': $('#issue-type').val(),
     'equipments': getItems('equipments'),
     'engineer': $('#engineer').val(),
