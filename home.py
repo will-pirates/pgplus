@@ -148,24 +148,27 @@ class GetTicketHandler(webapp2.RequestHandler):
         return [name, url]
 
     def get(self):
-		t = Ticket.all().filter('assigned', False).get()
-		response = {}
-		if t:
-			t.assigned = True
-			t.put()
-			LastAssignedTicket(key_name="1", ticket=t).put()
-		else:
-			lastAssignedTicket = LastAssignedTicket.get_by_key_name('1')
-			if lastAssignedTicket:
-				t = lastAssignedTicket.ticket
-		if t:
-			self.service = build_service(t.engineer[1])
-			notes = []
-			for note_id in t.note_ids:
-				notes.append(self.read_note(note_id))
-			response = {'id': t.key().id(), 'customer': t.customer, 'people': self.get_people(t.circle_id), 'engineer': t.engineer, 'lat': t.location.lat, 'lon': t.location.lon, 'documents': [self.get_document(document_id) for document_id in t.document_ids] , 'location_text': t.location_text, 'location': str(t.location), 'issue_type': t.issue_type, 'equipments': t.equipments, 'services': t.services, 'notes': notes}
-		self.response.headers.add_header("Access-Control-Allow-Origin", "*")
-		self.response.write(json.dumps(response))
+        job_id = self.request.get('job_id')
+        response = {}
+        if job_id:
+            t = Ticket.all().filter('job_id', job_id).get()
+        else:
+            t = Ticket.all().filter('assigned', False).get()
+        if t:
+            t.assigned = True
+            t.put()
+            LastAssignedTicket(key_name="1", ticket=t).put()
+        else:
+            lastAssignedTicket = LastAssignedTicket.get_by_key_name('1')
+            if lastAssignedTicket:
+                t = lastAssignedTicket.ticket
+        self.service = build_service(t.engineer[1])
+        notes = []
+        for note_id in t.note_ids:
+            notes.append(self.read_note(note_id))
+        response = {'id': t.key().id(), 'customer': t.customer, 'people': self.get_people(t.circle_id), 'engineer': t.engineer, 'lat': t.location.lat, 'lon': t.location.lon, 'documents': [self.get_document(document_id) for document_id in t.document_ids] , 'location_text': t.location_text, 'location': str(t.location), 'issue_type': t.issue_type, 'equipments': t.equipments, 'services': t.services, 'notes': notes}
+        self.response.headers.add_header("Access-Control-Allow-Origin", "*")
+        self.response.write(json.dumps(response))
 
 class AssignCirclesHandler(webapp2.RequestHandler):
     def get(self):
@@ -241,23 +244,23 @@ class GetTicketPeopleHandler(webapp2.RequestHandler):
                 if role in people:
                     parent_list = people[role]
                 else:
-                	people[role] = parent_list
+                    people[role] = parent_list
                 for person in tag_people[role]:
-                	if person[1] not in people_set:
-                		people_set.add(person[1])
-                		parent_list.append(person)
+                    if person[1] not in people_set:
+                        people_set.add(person[1])
+                        parent_list.append(person)
 
     def get(self):
         tag = self.request.get('tag')
         people = {}
         if tag != '-1':
-        	tag_people = tags_to_people[tag]
-        	people = tag_people
+            tag_people = tags_to_people[tag]
+            people = tag_people
         notes = self.request.get('notes').lower()
         for curr_tag in tags:
-        	if curr_tag in notes:
-        		tag_people = tags_to_people[curr_tag]
-        		self.extend(people, tag_people)
+            if curr_tag in notes:
+                tag_people = tags_to_people[curr_tag]
+                self.extend(people, tag_people)
         self.response.write(json.dumps(people))
 
 class GetTagsHandler(webapp2.RequestHandler):
