@@ -59,22 +59,16 @@
             </div>
           </div>
           <div class="form-group">
-            <div class="panel-group">
-              <div class="panel panel-default">
-                <div class="panel-heading">
-                  <h4 class="panel-title">
-                  <a data-toggle="collapse" href="#services">Services purchased</a>
-                  </h4>
-                </div>
-                <div id="services" class="panel-collapse collapse">
-                  <div class="itemslist">
-                  </div>
-                  <label for="service">Service:</label>
-                  <input type="text" class="form-control item" id="service">
-                  <button class="add-item-button btn btn-default" id="add-service">Add Service</button>
-                </div>
-              </div>
-            </div>
+            <label for="service">Service:</label>
+            <select class="form-control" id="service">
+              <option value="-1">Select Service Type</option>
+              <option value="Mid Sized Business Plus Package">Mid Sized Business Plus Package</option>
+              <option value="Small Business Basics">Small Business Basics</option>
+              <option value="Home Essentials Package">Home Essentials Package</option>
+              <option value="Enterprise Economy Bundle">Enterprise Economy Bundle</option>
+              <option value="Diamond Enterprise Bundle">Diamond Enterprise Bundle</option>
+              <option value="Mid Sized Business Package">Mid Sized Business Package</option>
+            </select>
           </div>
           <div class="form-group">
             <label for="engineer">Engineer:</label>

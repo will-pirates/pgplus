@@ -282,7 +282,7 @@ class TempHandler(webapp2.RequestHandler):
         issue_type = self.request.get('issue-type')
         job_id = self.request.get('job-id').replace('#','')
         equipments = self.request.get('equipments').split('#$#')
-        services = self.request.get('services').split('#$#')
+        services = [self.request.get('services')]
         location = GeoPt(lat, lng)
         location_text = self.request.get('location_text')
         customer = self.request.get('customer').split(',')

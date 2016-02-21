@@ -50,7 +50,7 @@ function jobIDChanged() {
     $('#issue-type').val(job_deets.issue.type);
     $('#issue-type').change();
     addItemsFor('equipments', job_deets.equipments);
-    addItemsFor('services', job_deets.services);
+    $('#service').val(job_deets.services[0]);
     $('#engineer').val(job_deets.engineer.id);
     $('#customer').val(job_deets.customer.id);
     addItemsFor('customernotes', job_deets.notes);
@@ -112,7 +112,7 @@ function submitTicket() {
     'notes': getItems('customernotes'),
     'documents' : getItems('ticketdocuments'),
     'location_text': $('#geo-location').val(), 
-    'services': getItems('services'),
+    'services': $('#service').val(),
     'customer': [$('#customer').val(), $('#customer option:selected').text()].join(),
     'engineer': [$('#engineer').val(), $('#engineer option:selected').text()].join()
   }).done(function(data) {
