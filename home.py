@@ -16,7 +16,7 @@ from oauth2client.client import OAuth2WebServerFlow, OAuth2Credentials
 
 # from api import get_credentials
 
-from models.ticket import Ticket, LastAssignedTicket
+#from models.ticket import Ticket, LastAssignedTicket
 from google.appengine.ext.db import GeoPt
 
 job_id_map = {
@@ -91,22 +91,14 @@ def build_service(engineer):
 
 class MainPage(webapp2.RequestHandler):
     def get(self):
-        '''
-        uri = get_credentials()
-        self.redirect(uri)
-        '''
-        credentials = OAuth2Credentials.from_json('{"user_agent": null, "access_token": "ya29.hgLC-ipSDIJ5kpEntB5LBpHhItUoeF2uChvRIKrY371fyVvgIpnIRIl-I2NPGpfNDLqs", "token_expiry": "2016-02-12T12:35:37Z", "scopes": ["https://www.googleapis.com/auth/plus.stream.write", "https://www.googleapis.com/auth/plus.circles.read", "https://www.googleapis.com/auth/plus.circles.write", "https://www.googleapis.com/auth/plus.stream.read", "https://www.googleapis.com/auth/plus.me"], "revoke_uri": "https://accounts.google.com/o/oauth2/revoke", "_class": "OAuth2Credentials", "invalid": false, "client_secret": "1kk1vYbu8hKBz_GxYjJl6Frm", "refresh_token": "1/Ecq-WjOjv8MHaHTGttxWTrAGXxaIJk044PuNSKF75MxIgOrJDtdun6zK6XiATCKT", "token_uri": "https://accounts.google.com/o/oauth2/token", "client_id": "255555110806-5d85l89k5c6ofdihp6fcflit86foatfc.apps.googleusercontent.com", "token_response": {"token_type": "Bearer", "refresh_token": "1/Ecq-WjOjv8MHaHTGttxWTrAGXxaIJk044PuNSKF75MxIgOrJDtdun6zK6XiATCKT", "id_token": "eyJhbGciOiJSUzI1NiIsImtpZCI6ImE0MTYzNjE5NDIzZGNkM2E3MzYxYWNmMmE2NDFiZjZmN2M5ZTQ4OGEifQ.eyJpc3MiOiJhY2NvdW50cy5nb29nbGUuY29tIiwiYXRfaGFzaCI6ImZqd1RhbF9tN1J5bVVqazY1TnlZUVEiLCJhdWQiOiIyNTU1NTUxMTA4MDYtNWQ4NWw4OWs1YzZvZmRpaHA2ZmNmbGl0ODZmb2F0ZmMuYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJzdWIiOiIxMTA5MzI2ODYyNjQyMzgwNzMxMDQiLCJhenAiOiIyNTU1NTUxMTA4MDYtNWQ4NWw4OWs1YzZvZmRpaHA2ZmNmbGl0ODZmb2F0ZmMuYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJpYXQiOjE0NTUyNzY5MzYsImV4cCI6MTQ1NTI4MDUzNn0.CIp7kSf5G_TsDaSzZBWTB8jRZOLZizJq4YGbXM_KYeA1JFf3iWFN53Ifk6hUNw1X6A6nl_BVoe4lqWK9eXneGmTIABTpNSWHam9ZXW8b6JpAJVvoUjlQNBKwbVI5dXSd6UdWZCJ6VS8btVI9NjzTNTCvroa3LeNycYPfugZ-NmdTfcm7cEJ7LPN2hfcuDhWU_sZ5xNNzzcEEz3w_7zAQTfIoX1Ufi81o1PzLvlHp5hxyEle-kepbC6XTd4ZekbJBO6DafGQCU6fwNuNRnJFr0HuEbxMrcqMvVCa6yVjezIta0NvKFC2SjADTR6yTCYUFH1hIspC2NYh6_5hWGJdBjQ", "access_token": "ya29.hgLC-ipSDIJ5kpEntB5LBpHhItUoeF2uChvRIKrY371fyVvgIpnIRIl-I2NPGpfNDLqs", "expires_in": 3600}, "id_token": {"azp": "255555110806-5d85l89k5c6ofdihp6fcflit86foatfc.apps.googleusercontent.com", "aud": "255555110806-5d85l89k5c6ofdihp6fcflit86foatfc.apps.googleusercontent.com", "iat": 1455276936, "exp": 1455280536, "sub": "110932686264238073104", "at_hash": "fjwTal_m7RymUjk65NyYQQ", "iss": "accounts.google.com"}, "token_info_uri": "https://www.googleapis.com/oauth2/v2/tokeninfo", "_module": "oauth2client.client"}')
-        credentials.refresh(httplib2.Http())
+        print("Here..")
+        path = os.path.join(os.path.dirname(__file__), 'autocomplete.html')
+        self.response.out.write(template.render(path, {}))
 
-        http = httplib2.Http()
-        http = credentials.authorize(http)
-        service = build('plusDomains', 'v1', http=http)
-
-        new_circle = {
-            'displayName': 'Flair Club'
-        }
-        resp = service.circles().insert(userId = 'me', body = new_circle).execute()
-        print(resp)
+class TreePage(webapp2.RequestHandler):
+    def get(self):
+        path = os.path.join(os.path.dirname(__file__), 'tree.html')
+        self.response.out.write(template.render(path, {}))        
 
 class AuthCallbackHandler(webapp2.RequestHandler):
     def get(self):
@@ -349,6 +341,7 @@ class JobDeetsHandler(webapp2.RequestHandler):
 
 app = webapp2.WSGIApplication([
                                 ('/', MainPage),
+                                ('/tree', TreePage),
                                 ('/auth', AuthHandler),
                                 ('/auth/callback', AuthCallbackHandler),
                                 ('/tickets/get', GetTicketHandler),

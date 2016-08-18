@@ -1,0 +1,43 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title></title>
+  <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.0/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.0/jquery-ui.js"></script>
+    <script type="text/javascript" language="javascript" src="assets/js/callids.json"></script>     
+    <script type="text/javascript" language="javascript" src="assets/js/customers.json"></script>     
+    <script type="text/javascript" language="javascript" src="assets/js/technicians.json"></script>     
+    <!--
+  <script type="text/javascript" language="javascript" src="../jsons/problem_codes.json"></script> 
+  <script type="text/javascript" language="javascript" src="../jsons/top_words_per_company.json"></script> 
+  <script type="text/javascript" language="javascript" src="../jsons/customer_codes_names.json"></script> 
+  <script type="text/javascript" language="javascript" src="../jsons/top_types_per_company.json"></script> 
+  <script type="text/javascript" language="javascript" src="../jsons/top_customers_by_type.json"></script> -->
+  <style>
+    body {
+      font-family: sans-serif;
+    }
+    body *{
+      padding: 5px;
+    }
+  </style>
+</head>
+<body>
+<div style='margin: 0 auto; width: 800px'>
+  Search by:
+  <div class="ui-widget">
+    <label for="callIDAutoComplete">Call ID: </label>
+    <input id="callIDAutoComplete">
+  </div>
+  <div>
+    <div id = 'headerLabel' style='font-weight: bold'>SQL Analysis:</div>
+    <div id = "sqlAnalysis"></div>
+    <div id = "siteAnalysis"></div>
+    <div id = "techAnalysis"></div>
+  </div>
+</div>
+  <script src="assets/js/script.js"></script>
+</body>
+</html>

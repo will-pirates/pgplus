@@ -31,3 +31,9 @@ handlers:
 
 - url: /auth/callback
   script: home.app
+
+- url: /tree
+  script: home.app
+
+- url: /
+  script: home.app

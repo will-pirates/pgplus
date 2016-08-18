@@ -1,38 +1,38 @@
-# import json
-# import httplib2
+import json
+import httplib2
 
-# from apiclient.discovery import build
-# from oauth2client.client import OAuth2WebServerFlow, OAuth2Credentials
+from apiclient.discovery import build
+from oauth2client.client import OAuth2WebServerFlow, OAuth2Credentials
 
-# def get_credentials():
-#     SCOPES = ['https://www.googleapis.com/auth/plus.me',
-#               'https://www.googleapis.com/auth/plus.stream.write',
-#               'https://www.googleapis.com/auth/plus.stream.read',
-#               'https://www.googleapis.com/auth/plus.circles.write',
-#               'https://www.googleapis.com/auth/plus.circles.read']
+def get_credentials():
+    SCOPES = ['https://www.googleapis.com/auth/plus.me',
+              'https://www.googleapis.com/auth/plus.stream.write',
+              'https://www.googleapis.com/auth/plus.stream.read',
+              'https://www.googleapis.com/auth/plus.circles.write',
+              'https://www.googleapis.com/auth/plus.circles.read']
 
-#     REDIRECT_URI = 'http://oscarosl-test.appspot.com'
+    REDIRECT_URI = 'http://oscarosl-test.appspot.com'
 
-#     CLIENT_ID = '255555110806-4lk2mou3oek0hk7l9rpnegaqaef85bgj.apps.googleusercontent.com'
-#     CLIENT_SECRET = '071WJgVZK-Rzb7bHyoHn28ao'
+    CLIENT_ID = '255555110806-4lk2mou3oek0hk7l9rpnegaqaef85bgj.apps.googleusercontent.com'
+    CLIENT_SECRET = '071WJgVZK-Rzb7bHyoHn28ao'
 
-#     flow = OAuth2WebServerFlow(client_id=CLIENT_ID,
-#                                client_secret=CLIENT_SECRET,
-#                                scope=SCOPES,
-#                                redirect_uri=REDIRECT_URI,
-#                                approval_prompt='force')
+    flow = OAuth2WebServerFlow(client_id=CLIENT_ID,
+                               client_secret=CLIENT_SECRET,
+                               scope=SCOPES,
+                               redirect_uri=REDIRECT_URI,
+                               approval_prompt='force')
 
-#     auth_uri = flow.step1_get_authorize_url()
+    auth_uri = flow.step1_get_authorize_url()
 
-#     print 'Please paste this URL in your browser to authenticate this program.'
-#     print auth_uri
-#     code = raw_input('Enter the code it gives you here: ')
+    print 'Please paste this URL in your browser to authenticate this program.'
+    print auth_uri
+    code = raw_input('Enter the code it gives you here: ')
 
-#     credentials = flow.step2_exchange(code)
-#     return credentials
+    credentials = flow.step2_exchange(code)
+    return credentials
 
-# credentials = get_credentials()
-# print credentials.to_json()
+credentials = get_credentials()
+print credentials.to_json()
 
 '''
 # credentials_json = '{"_module": "oauth2client.client", "token_expiry": "2016-02-05T09:03:10Z", "access_token": "ya29.fwLqgPt8KrQgGLba8clW300f-7KCcSPeuBR8uH5BIGR4-74P2mn0XWnr6WtS7zxV744b", "token_uri": "https://accounts.google.com/o/oauth2/token", "invalid": false, "token_response": {"access_token": "ya29.fwLqgPt8KrQgGLba8clW300f-7KCcSPeuBR8uH5BIGR4-74P2mn0XWnr6WtS7zxV744b", "token_type": "Bearer", "expires_in": 3600, "refresh_token": "1/y4jDrWImRezvaB6uCmh8ziHZraEf_JM5atkVYNgdA5k", "id_token": {"aud": "255555110806-4lk2mou3oek0hk7l9rpnegaqaef85bgj.apps.googleusercontent.com", "iss": "accounts.google.com", "at_hash": "Mi1H-Y8jMn6wlSXWgrl4GA", "exp": 1454662990, "azp": "255555110806-4lk2mou3oek0hk7l9rpnegaqaef85bgj.apps.googleusercontent.com", "iat": 1454659390, "sub": "106258495568677784165"}}, "client_id": "255555110806-4lk2mou3oek0hk7l9rpnegaqaef85bgj.apps.googleusercontent.com", "id_token": {"aud": "255555110806-4lk2mou3oek0hk7l9rpnegaqaef85bgj.apps.googleusercontent.com", "iss": "accounts.google.com", "at_hash": "Mi1H-Y8jMn6wlSXWgrl4GA", "exp": 1454662990, "azp": "255555110806-4lk2mou3oek0hk7l9rpnegaqaef85bgj.apps.googleusercontent.com", "iat": 1454659390, "sub": "106258495568677784165"}, "client_secret": "071WJgVZK-Rzb7bHyoHn28ao", "revoke_uri": "https://accounts.google.com/o/oauth2/revoke", "_class": "OAuth2Credentials", "refresh_token": "1/y4jDrWImRezvaB6uCmh8ziHZraEf_JM5atkVYNgdA5k", "user_agent": null}'
