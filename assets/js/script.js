@@ -14,6 +14,14 @@ const callIds = Object.keys(callids).reduce((arr, code) => {
   })
   return arr
 }, [])
+
+const partIds = Object.keys(notes_parts).reduce((arr, code) => {
+  arr.push({
+    label: code,
+    value: code,
+  })
+  return arr
+}, [])
 /*
 const typeTags = Object.keys(problemCodes).reduce((arr, code) => {
   arr.push({
@@ -65,6 +73,25 @@ $('#callIDAutoComplete').autocomplete({
   delay: 0,
   select: getCallResults,
 })
+
+$('#partIDAutoComplete').autocomplete({
+  source: partIds,
+  delay: 0,
+  select: getPartsResults,
+})
+
+function getPartsResults(event, ui) {
+  $('#sqlAnalysis').empty();
+  $('#partIDAutoComplete').val(ui.item.label);
+  const partID = ui.item.value;
+  var notes = notes_parts[partID];
+  $('#headerLabel').fadeIn();
+  var notesString = "";
+  for (var i = 0; i < notes_parts[partID].length; i++) {
+    notesString = notesString + notes_parts[partID][i] + "<br> ";
+  }
+  $('#sqlAnalysis').append(notesString);
+}
 
 function getCallResults(event, ui) {
   $('#sqlAnalysis').empty();

@@ -9,6 +9,7 @@
     <script type="text/javascript" language="javascript" src="assets/js/callids.json"></script>     
     <script type="text/javascript" language="javascript" src="assets/js/customers.json"></script>     
     <script type="text/javascript" language="javascript" src="assets/js/technicians.json"></script>     
+    <script type="text/javascript" language="javascript" src="assets/js/notes.json"></script>     
     <!--
   <script type="text/javascript" language="javascript" src="../jsons/problem_codes.json"></script> 
   <script type="text/javascript" language="javascript" src="../jsons/top_words_per_company.json"></script> 
@@ -27,6 +28,7 @@
 <body>
 <div style='margin: 0 auto; width: 800px'>
   Search by:
+  <!--
   <div class="ui-widget">
     <label for="callIDAutoComplete">Call ID: </label>
     <input id="callIDAutoComplete">
@@ -36,6 +38,15 @@
     <div id = "sqlAnalysis"></div>
     <div id = "siteAnalysis"></div>
     <div id = "techAnalysis"></div>
+  </div>
+  -->
+  <div class="ui-widget">
+    <label for="partIDAutoComplete">Part ID: </label>
+    <input id="partIDAutoComplete">
+  </div>
+  <div>
+    <div id = 'headerLabel' style='font-weight: bold'>SQL Analysis:</div>
+    <div id = "sqlAnalysis"></div>
   </div>
 </div>
   <script src="assets/js/script.js"></script>
