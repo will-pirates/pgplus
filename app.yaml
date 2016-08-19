@@ -35,5 +35,8 @@ handlers:
 - url: /tree
   script: home.app
 
+- url: /words
+  script: home.app
+
 - url: /
   script: home.app

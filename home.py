@@ -100,6 +100,11 @@ class TreePage(webapp2.RequestHandler):
         path = os.path.join(os.path.dirname(__file__), 'tree.html')
         self.response.out.write(template.render(path, {}))        
 
+class WordsPage(webapp2.RequestHandler):
+    def get(self):
+        path = os.path.join(os.path.dirname(__file__), 'words.html')
+        self.response.out.write(template.render(path, {}))        
+
 class AuthCallbackHandler(webapp2.RequestHandler):
     def get(self):
         code = self.request.get('code')
@@ -342,6 +347,7 @@ class JobDeetsHandler(webapp2.RequestHandler):
 app = webapp2.WSGIApplication([
                                 ('/', MainPage),
                                 ('/tree', TreePage),
+                                ('/words', WordsPage),
                                 ('/auth', AuthHandler),
                                 ('/auth/callback', AuthCallbackHandler),
                                 ('/tickets/get', GetTicketHandler),

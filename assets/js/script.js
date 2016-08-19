@@ -6,6 +6,7 @@
 
 $('.resultColumn').hide()
 $('#headerLabel').hide()
+$('#callHeaderLabel').hide()
 
 const callIds = Object.keys(callids).reduce((arr, code) => {
   arr.push({
@@ -16,6 +17,14 @@ const callIds = Object.keys(callids).reduce((arr, code) => {
 }, [])
 
 const partIds = Object.keys(notes_parts).reduce((arr, code) => {
+  arr.push({
+    label: code,
+    value: code,
+  })
+  return arr
+}, [])
+
+const words = Object.keys(words_parts).reduce((arr, code) => {
   arr.push({
     label: code,
     value: code,
@@ -80,6 +89,27 @@ $('#partIDAutoComplete').autocomplete({
   select: getPartsResults,
 })
 
+$('#wordsAutoComplete').autocomplete({
+  source: words,
+  delay: 0,
+  select: getWordsResults,
+})
+
+function getWordsResults(event, ui) {
+  console.log('here');
+  $('#wordsSqlAnalysis').empty();
+  $('#wordsAutoComplete').val(ui.item.label);
+  const word = ui.item.value;
+  var parts = words_parts[word];
+  $('#headerLabel').fadeIn();
+  var partsString = "<b>Parts associations:</b><br>";
+  for (var key in parts) {
+    console.log(parts[key]);
+    partsString = partsString + key + " -> " + parts[key] + "<br> ";
+  }
+  $('#wordsSqlAnalysis').append(partsString);
+}
+
 function getPartsResults(event, ui) {
   $('#sqlAnalysis').empty();
   $('#partIDAutoComplete').val(ui.item.label);
@@ -94,13 +124,14 @@ function getPartsResults(event, ui) {
 }
 
 function getCallResults(event, ui) {
-  $('#sqlAnalysis').empty();
+  $('#partIDAutoComplete').hide()
+  $('#callSqlAnalysis').empty();
   $('#siteAnalysis').empty();
   $('#techAnalysis').empty();
   $('#callIDAutoComplete').val(ui.item.label);
   const callID = ui.item.value;
   var callDeets = callids[callID];
-  $('#headerLabel').fadeIn();
+  $('#callHeaderLabel').fadeIn();
   var partsString = "";
   for (var i = 0; i < callDeets["parts"].length; i++) {
     partsString = partsString + callDeets["parts"][i]["part_name"] + " :: " + callDeets["parts"][i]["part_desc"] + "<br> ";
