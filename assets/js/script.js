@@ -24,7 +24,7 @@ const partIds = Object.keys(notes_parts).reduce((arr, code) => {
   return arr
 }, [])
 
-const words = Object.keys(words_parts).reduce((arr, code) => {
+const words = Object.keys(bayes_probab).reduce((arr, code) => {
   arr.push({
     label: code,
     value: code,
@@ -96,18 +96,21 @@ $('#wordsAutoComplete').autocomplete({
 })
 
 function getWordsResults(event, ui) {
-  console.log('here');
   $('#wordsSqlAnalysis').empty();
   $('#wordsAutoComplete').val(ui.item.label);
   const word = ui.item.value;
-  var parts = words_parts[word];
+  var parts = bayes_probab[word];
   $('#headerLabel').fadeIn();
-  var partsString = "<b>Parts associations:</b><br>";
+  var partsString = "<b>Parts associations:</b><br><table id='scores_table'><thead><tr><th>Part ID</th><th>Bayesian score</th><th>Probability of part occuring</th><th>Probability of word given part</th><th>Total probability of word</th></tr></thead>";
   for (var key in parts) {
-    console.log(parts[key]);
-    partsString = partsString + key + " -> " + parts[key] + "<br> ";
+    partsString = partsString + "<tr b-scope='scores'><td b-sort='part'>" + key + "</td><td b-sort='bayes'>" + parts[key]['probab'] + "</td><td b-sort='part'>" + parts[key]['part_probab'] + "</td><td b-sort='word_part'>" + parts[key]['word_given_part'] + "</td><td b-sort='word'>" + parts[key]['word_probab'] + "</td></tr> ";
   }
   $('#wordsSqlAnalysis').append(partsString);
+  $(document).ready(function() 
+      { 
+          $("#scores_table").tablesorter(); 
+      } 
+  ); 
 }
 
 function getPartsResults(event, ui) {

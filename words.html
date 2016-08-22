@@ -10,6 +10,7 @@
     <script type="text/javascript" language="javascript" src="assets/js/customers.json"></script>     
     <script type="text/javascript" language="javascript" src="assets/js/technicians.json"></script>
     <script type="text/javascript" language="javascript" src="assets/js/notes.json"></script>
+    <script type="text/javascript" language="javascript" src="assets/js/jquery.tablesorter.min.js"></script>
     <!--
   <script type="text/javascript" language="javascript" src="../jsons/problem_codes.json"></script> 
   <script type="text/javascript" language="javascript" src="../jsons/top_words_per_company.json"></script> 
@@ -23,10 +24,13 @@
     body *{
       padding: 5px;
     }
+    th, td {
+      border: 0.5px solid black;
+    }
   </style>
 </head>
 <body>
-<div style='margin: 0 auto; width: 800px'>
+<div style='margin: 0 auto; width: 100%'>
   Search by:
   <div class="ui-widget">
     <label for="wordsAutoComplete">Word: </label>
